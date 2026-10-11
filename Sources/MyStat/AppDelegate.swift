@@ -81,7 +81,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         // Reopening a bundle should reveal the existing instance, not add another meter.
         let others = NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier ?? "io.github.ballardcm.MyStat")
         if others.contains(where: { $0.processIdentifier != ProcessInfo.processInfo.processIdentifier }) { NSApp.terminate(nil); return }
-        item = NSStatusBar.system.statusItem(withLength: 156)
+        item = NSStatusBar.system.statusItem(withLength: 126)
         if let button = item.button {
             button.target = self; button.action = #selector(togglePanel)
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
@@ -188,19 +188,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private func updateMenuBar() {
         let m = monitor.metrics
         let values = [m.cpu, m.memory.pressurePercent, m.gpu]
-        let image = NSImage(size: NSSize(width: 150, height: 22), flipped: false) { rect in
+        let image = NSImage(size: NSSize(width: 120, height: 22), flipped: false) { _ in
             for (index, label) in ["CPU", "MEM", "GPU"].enumerated() {
-                let x = CGFloat(index) * 51
+                let x = CGFloat(index) * 40
                 let caption: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 7.5, weight: .bold), .foregroundColor: NSColor.black]
                 let number: [NSAttributedString.Key: Any] = [.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium), .foregroundColor: NSColor.black]
                 (label as NSString).draw(at: NSPoint(x: x + 2, y: 12), withAttributes: caption)
                 let text = self.monitor.paused ? "Ⅱ" : values[index].map { String(format: "%.0f%%", $0) } ?? "—"
                 (text as NSString).draw(at: NSPoint(x: x + 2, y: 0), withAttributes: number)
-                let rail = NSBezierPath(roundedRect: NSRect(x: x + 38, y: 3, width: 3, height: 15), xRadius: 1.5, yRadius: 1.5)
-                NSColor.black.withAlphaComponent(0.18).setFill(); rail.fill()
-                if let v = values[index], !self.monitor.paused {
-                    NSColor.black.setFill(); NSBezierPath(roundedRect: NSRect(x: x + 38, y: 3, width: 3, height: max(1, 15 * v / 100)), xRadius: 1.5, yRadius: 1.5).fill()
-                }
             }
             return true
         }
