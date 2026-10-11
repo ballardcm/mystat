@@ -12,9 +12,9 @@ One executable. No package dependencies, accounts, subscriptions, analytics, net
 
 ## A closer look
 
-Menu bar (example readings):
+Actual menu bar capture on macOS 26:
 
-<img src="docs/screenshots/menu-bar.png" width="120" alt="Compact MyStat menu bar: CPU, MEM, and GPU labels above percentage readings, without vertical usage bars">
+<img src="docs/screenshots/menu-bar.png" width="190" alt="MyStat in the macOS menu bar showing live CPU activity, memory pressure, and GPU activity">
 
 <p>
   <img src="docs/screenshots/dark.png" width="380" alt="MyStat in dark mode: CPU and GPU activity, memory pressure, per-core bars, RAM usage, temperatures, and power draw">
