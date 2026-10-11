@@ -4,7 +4,7 @@ MyStat is built for and tested on **Apple Silicon running macOS 26**. macOS 27 s
 
 ## Download and open
 
-1. Download `MyStat-0.1.0-macos-arm64.zip` from the [GitHub release](https://github.com/ballardcm/mystat/releases/latest).
+1. Download `MyStat-0.1.1-macos-arm64.zip` from the [GitHub release](https://github.com/ballardcm/mystat/releases/latest).
 2. Double-click the ZIP, then drag `MyStat.app` into Applications.
 3. Open MyStat. Its CPU / MEM / GPU display appears in your menu bar; it has no Dock icon.
 4. Click the display to see details. MEM is **memory pressure**; the dropdown also shows the percentage of physical memory used.
@@ -20,7 +20,7 @@ Download `SHA256SUMS` from the same release and place it beside the ZIP. In Term
 shasum -a 256 -c SHA256SUMS
 ```
 
-The result should be `MyStat-0.1.0-macos-arm64.zip: OK`. A checksum detects mismatched or corrupted downloads; it is not a substitute for trusting the release source.
+The result should be `MyStat-0.1.1-macos-arm64.zip: OK`. A checksum detects mismatched or corrupted downloads; it is not a substitute for trusting the release source.
 
 ## Update
 

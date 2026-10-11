@@ -34,9 +34,9 @@ Click outside, press Escape, click the menu-bar item again, or use × to close. 
 
 ## Install
 
-Download `MyStat-0.1.0-macos-arm64.zip` from [Releases](https://github.com/ballardcm/mystat/releases), unzip it, move `MyStat.app` into Applications, and open it. Look in the menu bar; there is no Dock icon.
+Download `MyStat-0.1.1-macos-arm64.zip` from [Releases](https://github.com/ballardcm/mystat/releases), unzip it, move `MyStat.app` into Applications, and open it. Look in the menu bar; there is no Dock icon.
 
-The initial release is **ad-hoc signed, not Developer ID signed or notarized**. macOS may block the first launch. See [installation instructions](INSTALL.md) for Apple's per-app approval steps, checksum verification, updating, and uninstalling. You can also build from source below.
+This release is **ad-hoc signed, not Developer ID signed or notarized**. macOS may block the first launch. See [installation instructions](INSTALL.md) for Apple's per-app approval steps, checksum verification, updating, and uninstalling. You can also build from source below.
 
 ## Build from source
 
@@ -52,8 +52,6 @@ cd mystat
 ./scripts/test.sh
 open build/MyStat.app
 ```
-
-If the first PR is still under review, check out `feat/initial-release` after cloning. `main` starts with an empty bootstrap commit so all application code enters through a PR.
 
 The first release was built with Swift 6.3.3 and the macOS 26.5 SDK, and tested on macOS 26.6. The build uses the active developer directory's default SDK, ignoring an inherited `SDKROOT`. If needed, set `MYSTAT_SDK` to a compatible SDK directory. It produces an arm64 app with an ad-hoc signature in `build/MyStat.app`.
 
