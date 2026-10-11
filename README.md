@@ -12,6 +12,10 @@ One executable. No package dependencies, accounts, subscriptions, analytics, net
 
 ## A closer look
 
+Menu bar (example readings):
+
+<img src="docs/screenshots/menu-bar.png" width="120" alt="Compact MyStat menu bar: CPU, MEM, and GPU labels above percentage readings, without vertical usage bars">
+
 <p>
   <img src="docs/screenshots/dark.png" width="380" alt="MyStat in dark mode: CPU and GPU activity, memory pressure, per-core bars, RAM usage, temperatures, and power draw">
   <img src="docs/screenshots/light.png" width="380" alt="MyStat in light mode with the same compact system-statistics dashboard">
