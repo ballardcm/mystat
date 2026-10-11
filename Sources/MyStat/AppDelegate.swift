@@ -81,16 +81,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         // Reopening a bundle should reveal the existing instance, not add another meter.
         let others = NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier ?? "io.github.ballardcm.MyStat")
         if others.contains(where: { $0.processIdentifier != ProcessInfo.processInfo.processIdentifier }) { NSApp.terminate(nil); return }
-        item = NSStatusBar.system.statusItem(withLength: 126)
+        item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = item.button {
             button.target = self; button.action = #selector(togglePanel)
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
             button.setAccessibilityLabel("MyStat system monitor")
         }
-        panel = DashboardPanel(contentRect: NSRect(x: 0, y: 0, width: 424, height: monitor.panelHeight), styleMask: [.borderless], backing: .buffered, defer: false)
+        panel = DashboardPanel(contentRect: NSRect(x: 0, y: 0, width: 424, height: monitor.panelHeight), styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
         panel.title = "MyStat"
         panel.delegate = self
         panel.isFloatingPanel = true; panel.level = .popUpMenu
+        panel.hidesOnDeactivate = false
         panel.isOpaque = false; panel.backgroundColor = .clear; panel.hasShadow = true
         panel.isReleasedWhenClosed = false
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
@@ -133,8 +134,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         let screen = statusWindow.screen?.visibleFrame ?? NSScreen.main!.visibleFrame
         let x = min(max(screen.minX + 8, anchor.midX - 212), screen.maxX - 432)
         let y = max(screen.minY + 8, anchor.minY - monitor.panelHeight - 5)
-        panel.setFrameOrigin(NSPoint(x: x, y: y))
-        NSApp.activate(ignoringOtherApps: true)
+        // Attaching a fresh hosting controller can reset the borderless panel's size.
+        panel.setFrame(NSRect(x: x, y: y, width: 424, height: monitor.panelHeight), display: true)
         panel.makeKeyAndOrderFront(nil)
         installDismissalMonitors()
         reviewEvent("opened key=\(panel.isKeyWindow)")
@@ -188,14 +189,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private func updateMenuBar() {
         let m = monitor.metrics
         let values = [m.cpu, m.memory.pressurePercent, m.gpu]
-        let image = NSImage(size: NSSize(width: 120, height: 22), flipped: false) { _ in
-            for (index, label) in ["CPU", "MEM", "GPU"].enumerated() {
-                let x = CGFloat(index) * 40
-                let caption: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 7.5, weight: .bold), .foregroundColor: NSColor.black]
-                let number: [NSAttributedString.Key: Any] = [.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium), .foregroundColor: NSColor.black]
-                (label as NSString).draw(at: NSPoint(x: x + 2, y: 12), withAttributes: caption)
-                let text = self.monitor.paused ? "Ⅱ" : values[index].map { String(format: "%.0f%%", $0) } ?? "—"
-                (text as NSString).draw(at: NSPoint(x: x + 2, y: 0), withAttributes: number)
+        let labels = ["CPU", "MEM", "GPU"]
+        let texts = values.map { monitor.paused ? "Ⅱ" : percent($0) }
+        let caption: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 7.5, weight: .bold), .foregroundColor: NSColor.black]
+        let number: [NSAttributedString.Key: Any] = [.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium), .foregroundColor: NSColor.black]
+        let widths = labels.indices.map { index in
+            ceil(max((labels[index] as NSString).size(withAttributes: caption).width,
+                     (texts[index] as NSString).size(withAttributes: number).width))
+        }
+        let gap: CGFloat = 8
+        let width = widths.reduce(0, +) + gap * CGFloat(labels.count - 1)
+        let image = NSImage(size: NSSize(width: width, height: 22), flipped: false) { _ in
+            var x: CGFloat = 0
+            for index in labels.indices {
+                (labels[index] as NSString).draw(at: NSPoint(x: x, y: 12), withAttributes: caption)
+                (texts[index] as NSString).draw(at: NSPoint(x: x, y: 0), withAttributes: number)
+                x += widths[index] + gap
             }
             return true
         }
