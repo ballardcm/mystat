@@ -1,0 +1,33 @@
+# Build products, archives, diagnostics, and local captures
+/build/
+/dist/
+/.build/
+/DerivedData/
+/docs/screenshots/*.json
+*.app/
+*.dSYM/
+*.o
+*.zip
+*.dmg
+*.pkg
+*.log
+
+# macOS and editor state
+.DS_Store
+._*
+xcuserdata/
+*.xcuserstate
+/.idea/
+/.vscode/
+
+# Local credentials and agent state
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.mobileprovision
+/.codex/
+/.agents/
+/.aws/
