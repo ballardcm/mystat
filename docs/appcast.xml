@@ -4,31 +4,27 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
   <channel>
     <title>MyStat stable updates</title>
     <link>https://github.com/ballardcm/mystat/releases</link>
-    <description>Stable releases for Apple Silicon on macOS 26.</description>
+    <description>Stable releases for Apple Silicon on macOS 26 and 27.</description>
     <item>
-      <title>MyStat 0.1.2</title>
-      <sparkle:version>3</sparkle:version>
-      <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+      <title>MyStat 0.1.3</title>
+      <sparkle:version>4</sparkle:version>
+      <sparkle:shortVersionString>0.1.3</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-      <sparkle:maximumSystemVersion>26.99</sparkle:maximumSystemVersion>
-      <description sparkle:format="plain-text">MyStat 0.1.2 adds the running app version to the dropdown and signed updates using Sparkle.
+      <sparkle:maximumSystemVersion>27.99</sparkle:maximumSystemVersion>
+      <description sparkle:format="plain-text">MyStat 0.1.3
 
-- Check for updates manually from the gear or menu-bar menu.
-- Opt in to daily update checks; automatic checks start off. Downloads and installation require your choice.
-- Update feeds and downloads are verified with Ed25519 signatures. No telemetry or hardware profiles are sent.
-- Update installation supports a writable, user-owned Applications folder on macOS 26.
+Fixes in-app update checks on macOS 27. The signed stable feed and local updater now accept macOS 26 and 27. Physical sensor support on macOS 27 remains experimental; VM testing does not validate hardware readings.
 
-Published 0.1.1 has no updater: install this release manually once. Future compatible releases can use in-app updates.
-macOS 27 remains experimental, and in-app updates are limited to macOS 26. Builds remain ad-hoc signed, not Developer ID signed or notarized; use the documented macOS per-app approval flow when installing manually.
+On macOS 26, use Check for Updates in MyStat 0.1.2 to install this release. Older MyStat builds already running on macOS 27 require one manual installation of 0.1.3 because their local OS restriction prevents checking. After that, Check for Updates works normally. Published 0.1.1 also requires a manual upgrade because it has no updater.
 
-Validated on macOS 26 with native build/unit tests, real Sparkle signed update integration tests, and VM launch-at-login/preference checks. Physical GPU/thermal/power compatibility must be validated on real hardware.
+Automatic checks remain off by default. Opt-in checks notify you; installation still requires your action. Signed feeds and downloads, no telemetry, no system profiling, and no privileged helper. Install in a user-owned writable Applications folder.
 
-Bundled Sparkle retains its upstream license. Substantial implementation, documentation, and test assistance: OpenAI Codex.
+Apple Silicon only. The app is ad-hoc signed, not Developer ID signed or notarized. Sparkle is bundled under its included license; MyStat remains MIT licensed. Substantial implementation and testing assistance from OpenAI Codex.
 </description>
-      <enclosure url="https://github.com/ballardcm/mystat/releases/download/v0.1.2/MyStat-0.1.2-macos-arm64.zip" length="1589066" type="application/octet-stream" sparkle:edSignature="Q1ubuWGsyvwkiOsPnIO6Q/fcpkBSloo5yPGvGsnaV3T0LJtlgSQnArAFm+psnaU9i21I1KdsM9X6G41wFgDRAQ==" sparkle:installationType="application" sparkle:os="macos"></enclosure>
+      <enclosure url="https://github.com/ballardcm/mystat/releases/download/v0.1.3/MyStat-0.1.3-macos-arm64.zip" length="1589302" type="application/octet-stream" sparkle:edSignature="124qz5PYVBDBaWlh4AaTbRK2YCEFH20DsoZv2HQgQ6qUtPCeiaP5DSIRggogWtwiRuDTUQwxRQ+JA5nqqEk+CA==" sparkle:installationType="application" sparkle:os="macos"></enclosure>
     </item>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: yB28iMqJXC9gj1hRDRy4iBN+bYDyjGWT6d2Vl7IBUodbEIb9AfclDHr1u023Ryo0r3KnRF5h6OysUZ8u9OzkAg==
-length: 2450
+edSignature: xXs7aBAX+zRQ/hxCyqTBQ7DtDDZSgcGCaEbqnfd5WxWY1ei0QWw9pC/RCJXKGeLzkC+2I/maQ+8+mbv+Y4GWBg==
+length: 2368
 -->
