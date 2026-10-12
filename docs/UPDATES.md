@@ -12,7 +12,7 @@ MyStat uses Sparkle 2.10.0 for optional updates. A custom installer would add se
 - Release notes are embedded plain text in the signed feed. JavaScript, external release-note downloads, system profiling, telemetry, and automatic installation are disabled. GitHub receives ordinary network metadata and a User-Agent; the app sends no sampled statistics or hardware profile.
 - Turning off checks prevents future scheduled checks, not cancellation of an already authorized operation. After download/preparation, deferring relaunch may still install on quit. Users can cancel/skip in Sparkle's UI.
 
-The initial signed feed intentionally contains no release entries. It is usable after the branch is merged, and can be populated once a compatible stable release is actually available. Existing 0.1.1 apps require one manual upgrade because they contain no updater or trusted update key.
+The signed feed contains the latest published stable release, currently 0.1.2. Existing published 0.1.1 apps require one manual upgrade because they contain no updater or trusted update key. The updater-enabled development candidate used in the VM can upgrade directly to 0.1.2.
 
 ## Keys and dependency
 

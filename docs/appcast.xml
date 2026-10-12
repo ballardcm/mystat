@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><!-- sparkle-sign-warning:
 IMPORTANT: This file was signed by Sparkle. Any modifications to this file requires re-signing this file with generate_appcast or sign_update! The signed signature will be embedded at the end of this file.
---><rss version="2.0">
+--><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>MyStat stable updates</title>
     <link>https://github.com/ballardcm/mystat/releases</link>
     <description>Stable releases for Apple Silicon on macOS 26.</description>
+    <item>
+      <title>MyStat 0.1.2</title>
+      <sparkle:version>3</sparkle:version>
+      <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+      <sparkle:maximumSystemVersion>26.99</sparkle:maximumSystemVersion>
+      <description sparkle:format="plain-text">MyStat 0.1.2 adds the running app version to the dropdown and signed updates using Sparkle.
+
+- Check for updates manually from the gear or menu-bar menu.
+- Opt in to daily update checks; automatic checks start off. Downloads and installation require your choice.
+- Update feeds and downloads are verified with Ed25519 signatures. No telemetry or hardware profiles are sent.
+- Update installation supports a writable, user-owned Applications folder on macOS 26.
+
+Published 0.1.1 has no updater: install this release manually once. Future compatible releases can use in-app updates.
+macOS 27 remains experimental, and in-app updates are limited to macOS 26. Builds remain ad-hoc signed, not Developer ID signed or notarized; use the documented macOS per-app approval flow when installing manually.
+
+Validated on macOS 26 with native build/unit tests, real Sparkle signed update integration tests, and VM launch-at-login/preference checks. Physical GPU/thermal/power compatibility must be validated on real hardware.
+
+Bundled Sparkle retains its upstream license. Substantial implementation, documentation, and test assistance: OpenAI Codex.
+</description>
+      <enclosure url="https://github.com/ballardcm/mystat/releases/download/v0.1.2/MyStat-0.1.2-macos-arm64.zip" length="1589066" type="application/octet-stream" sparkle:edSignature="Q1ubuWGsyvwkiOsPnIO6Q/fcpkBSloo5yPGvGsnaV3T0LJtlgSQnArAFm+psnaU9i21I1KdsM9X6G41wFgDRAQ==" sparkle:installationType="application" sparkle:os="macos"></enclosure>
+    </item>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: B9WebknVu+Ad1LtDzD73uDShEE1fXiLuPW9LehFk2nWFfE0EU8nMlCQ3oaaesSkgReR9gg5vDtmCitDYk0GuBQ==
-length: 523
+edSignature: yB28iMqJXC9gj1hRDRy4iBN+bYDyjGWT6d2Vl7IBUodbEIb9AfclDHr1u023Ryo0r3KnRF5h6OysUZ8u9OzkAg==
+length: 2450
 -->
