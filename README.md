@@ -6,7 +6,7 @@ MyStat is a small native Swift/SwiftUI monitor for Apple Silicon. CPU activity, 
 
 A native app with no accounts, subscriptions, analytics, or privileged helper. Sparkle is bundled for optional signed updates; automatic checks are off by default. Free to use, change, and share under the [MIT license](LICENSE).
 
-**Built for and tested on macOS 26**, on an M5 Pro MacBook Pro. In-app updates also work on macOS 27; sensor support there remains experimental. Other chips and OS versions have not yet been hardware-validated; some sensors may be unavailable.
+**Built for and tested on macOS 26**, on an M5 Pro MacBook Pro. Successful operation has also been reported on an M5 MacBook Air running macOS 26. MyStat 0.1.3 passed a hardware smoke check on an M5 Pro MacBook Pro running macOS 27.0.1, including live readings and a brief CPU workload comparison. In-app updates work on macOS 26 and 27; macOS 27 sensor accuracy remains experimental. See the [hardware test results and limits](docs/testing/2026-10-12-hardware.md). Other hardware and OS combinations may have unavailable sensors.
 
 [Download the latest release](https://github.com/ballardcm/mystat/releases/latest) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/ballardcm/mystat/issues)
 
@@ -79,7 +79,7 @@ Artifacts are written to `dist/`, which is excluded from Git. The release script
 
 Missing counters display a dash. Invalid units, negative energy deltas, implausible values, and sleep gaps are rejected. Some hardware interfaces are private and may change with macOS updates. CPU and memory collection remain separate from hardware sensor availability.
 
-Experimental macOS 27 CLPC mappings are present in the source, but **physical sensor compatibility on macOS 27 is not yet validated**. In-app update support is separate from sensor validation. The mapping tests validate identifiers and conversions, not real-world readings on macOS 27.
+On an M5 Pro running macOS 27.0.1, CPU usage agreed with macOS `top`, memory pressure matched `memory_pressure -Q`, and CPU power and temperature readings rose under load and fell afterward. This [hardware smoke check](docs/testing/2026-10-12-hardware.md) establishes basic operation on that configuration, not precise sensor accuracy or support across all Apple Silicon Macs. macOS 27 CLPC mappings remain experimental; independent power/temperature validation and sleep/wake testing are still needed. In-app update tests and synthetic mapping tests do not establish physical sensor accuracy.
 
 See [third-party notices](THIRD_PARTY_NOTICES.md) for hardware-interface references and attribution.
 
