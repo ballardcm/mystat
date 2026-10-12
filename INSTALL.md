@@ -1,6 +1,6 @@
 # Install MyStat
 
-MyStat is built for and tested on **Apple Silicon running macOS 26**. Version 0.1.3 enables in-app updates on macOS 27; physical sensor support there remains experimental. This release does not include an Intel binary.
+MyStat is built for and tested on **Apple Silicon running macOS 26**, with M5 Pro hardware testing and a reported successful test on an M5 MacBook Air. Version 0.1.3 also passed a hardware smoke check on an M5 Pro running macOS 27.0.1 and enables in-app updates on macOS 27; sensor accuracy there remains experimental. See the [hardware test results and limits](docs/testing/2026-10-12-hardware.md). This release does not include an Intel binary.
 
 ## Download and open
 

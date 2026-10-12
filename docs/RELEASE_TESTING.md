@@ -12,6 +12,8 @@ For the owner's dedicated disposable lab, configure automatic login and no passw
 
 Maintain a separate macOS 27 experimental baseline with the same unattended configuration. Verify the restore image is supported by the host before installation. A working VM does not establish MyStat compatibility: record macOS 27 results separately, and retain macOS 26 as the release qualification target. Starting with 0.1.3, in-app updates accept macOS 27. Test its update flow separately; physical sensor mappings there remain experimental. Older builds already on 27 require a manual installation of 0.1.3 before they can check for updates.
 
+Keep both clean OS baselines after successful upgrade tests, shut down between test sessions. The macOS 26 VM preserves release coverage when the physical host runs macOS 27; the macOS 27 VM remains useful for repeatable clean-install, upgrade, settings-persistence, and failure-recovery checks. Reuse or recreate working clones for future releases, leaving the baselines intact. Continue using physical hardware for sensor checks.
+
 Host home, cloud folders, application sharing, shared clipboard, and automatic volume sharing should be disabled for both baselines. Keep Apple Account sign-in out of these disposable guests. Record the exact guest OS build and verify all settings rather than assuming a clone or a new OS version preserves them.
 
 ## Build and automated checks
@@ -58,4 +60,4 @@ Version 0.1.1 has no updater: test its manual replacement with the first updater
 
 Record commit, tag/version/build, ZIP SHA-256, host/guest macOS build, Parallels version, baseline/clone name, tests run, pass/fail results, and unresolved issues. Keep raw diagnostics and local logs in ignored `build/` or outside the repository. Commit only reviewed app-only screenshots. Block release on failed integrity, recovery, relaunch, permission, or data-preservation checks.
 
-On the physical Apple Silicon host, compare CPU/memory and available GPU/thermal/power readings with trusted system readings. A VM cannot validate AppleSMC or IOReport sensor compatibility. Physical sensor compatibility on macOS 27 remains unvalidated; successful update tests do not establish sensor accuracy.
+On the physical Apple Silicon host, compare CPU/memory and available GPU/thermal/power readings with trusted system readings. A VM cannot validate AppleSMC or IOReport sensor compatibility. The [2026-10-12 M5 Pro smoke check](testing/2026-10-12-hardware.md) demonstrated live readings and CPU workload response on macOS 27.0.1; independent sensor-accuracy validation and sleep/wake testing remain outstanding. Successful update tests do not establish sensor accuracy.
