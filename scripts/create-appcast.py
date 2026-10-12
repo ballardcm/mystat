@@ -21,7 +21,7 @@ def create_feed(info=None, archive=None, signature=None, notes=None):
     channel = ET.SubElement(root, 'channel')
     ET.SubElement(channel, 'title').text = 'MyStat stable updates'
     ET.SubElement(channel, 'link').text = RELEASES
-    ET.SubElement(channel, 'description').text = 'Stable releases for Apple Silicon on macOS 26.'
+    ET.SubElement(channel, 'description').text = 'Stable releases for Apple Silicon on macOS 26 and 27.'
     if info is not None:
         version, build = info['CFBundleShortVersionString'], info['CFBundleVersion']
         if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', version) or not re.fullmatch(r'[0-9]+', build):
@@ -40,7 +40,7 @@ def create_feed(info=None, archive=None, signature=None, notes=None):
         ET.SubElement(item, f'{{{SPARKLE}}}version').text = build
         ET.SubElement(item, f'{{{SPARKLE}}}shortVersionString').text = version
         ET.SubElement(item, f'{{{SPARKLE}}}minimumSystemVersion').text = '26.0'
-        ET.SubElement(item, f'{{{SPARKLE}}}maximumSystemVersion').text = '26.99'
+        ET.SubElement(item, f'{{{SPARKLE}}}maximumSystemVersion').text = '27.99'
         ET.SubElement(item, 'description', {f'{{{SPARKLE}}}format': 'plain-text'}).text = notes
         ET.SubElement(item, 'enclosure', {
             'url': f'{RELEASES}/download/v{version}/{archive.name}',

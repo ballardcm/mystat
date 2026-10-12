@@ -1,6 +1,6 @@
 # Install MyStat
 
-MyStat is built for and tested on **Apple Silicon running macOS 26**. macOS 27 support is planned for a later update. This release does not include an Intel binary.
+MyStat is built for and tested on **Apple Silicon running macOS 26**. Version 0.1.3 enables in-app updates on macOS 27; physical sensor support there remains experimental. This release does not include an Intel binary.
 
 ## Download and open
 
@@ -28,7 +28,7 @@ For the published 0.1.1 release, quit MyStat, replace the app in Applications wi
 
 Updater-enabled builds offer **Check for Updates…** in the right-click and gear menus. You can optionally enable **Automatically check for updates** in the gear menu; it is off by default and checks about once per day. Review the version and release notes, then install and relaunch, defer, or skip. Downloads begin only after choosing Install; installation preserves preferences and the app's location.
 
-Checks and downloads contact GitHub and its download CDN; system profiling and telemetry are disabled. Both the feed and downloaded archive must have valid signatures. If offline, verification fails, or the installation is not user-owned and writable, keep using the installed version or update manually. Move the app out of the downloaded ZIP/disk image into an Applications folder you own before using in-app updates. Updates do not require administrator authorization or a privileged helper. macOS 26 is the supported update target.
+Checks and downloads contact GitHub and its download CDN; system profiling and telemetry are disabled. Both the feed and downloaded archive must have valid signatures. If offline, verification fails, or the installation is not user-owned and writable, keep using the installed version or update manually. Move the app out of the downloaded ZIP/disk image into an Applications folder you own before using in-app updates. Updates do not require administrator authorization or a privileged helper. In-app updates accept macOS 26 and 27. An older MyStat installation on macOS 27 needs one manual installation of 0.1.3 because its existing updater blocks that OS. On macOS 26, MyStat 0.1.2 can install 0.1.3 through Check for Updates.
 
 After an update has been downloaded and prepared, Sparkle may install it when you quit even if you defer the relaunch. Turning off automatic checks stops future scheduled checks; it does not cancel an update already in progress. Use Cancel/Skip in the updater to abandon that update.
 
