@@ -4,7 +4,7 @@
 
 MyStat is a small native Swift/SwiftUI monitor for Apple Silicon. CPU activity, memory pressure, and GPU activity stay visible at a glance. Click for the details, then get back to what you were doing.
 
-One executable. No package dependencies, accounts, subscriptions, analytics, network requests, or privileged helper. Free to use, change, and share under the [MIT license](LICENSE).
+A native app with no accounts, subscriptions, analytics, or privileged helper. Sparkle is bundled for optional signed updates; automatic checks are off by default. Free to use, change, and share under the [MIT license](LICENSE).
 
 **Built for and tested on macOS 26**, on an M5 Pro MacBook Pro. **macOS 27 support is planned for a later update.** Other chips and OS versions have not yet been hardware-validated; some sensors may be unavailable.
 
@@ -28,7 +28,7 @@ Actual app captures on an M5 Pro running macOS 26. Readings vary with workload. 
 - **GPU:** device activity, renderer/tiler activity, and unified-memory usage.
 - **Thermals and power:** CPU/GPU temperatures, component power estimates, whole-Mac power, and fan speeds where available.
 - **Small by design:** two-second sampling by default, bounded in-memory history, no background subprocess polling, and sampling pauses during sleep. The dropdown view is released when closed.
-- **Your choice:** 1/2/5-second updates, pause, and optional launch at login.
+- **Your choice:** 1/2/5-second sampling, pause, optional launch at login, and opt-in daily update checks. The dropdown shows the running version.
 
 Click outside, press Escape, click the menu-bar item again, or use × to close. Right-click the menu-bar item for pause and quit.
 
@@ -40,7 +40,7 @@ This release is **ad-hoc signed, not Developer ID signed or notarized**. macOS m
 
 ## Build from source
 
-Use an Apple Silicon Mac with macOS 26 and a compatible Apple Swift/Clang toolchain. Xcode Command Line Tools are enough; full Xcode, Homebrew, GCC, and third-party packages are unnecessary.
+Use an Apple Silicon Mac with macOS 26 and a compatible Apple Swift/Clang toolchain. Xcode Command Line Tools and Python 3 are enough; full Xcode, Homebrew, and GCC are unnecessary. The first build downloads a pinned, checksum-verified Sparkle framework from its official GitHub release; later builds reuse that archive. No dependency installation is required for users.
 
 ```sh
 # Only if Command Line Tools are not already installed:
@@ -94,6 +94,14 @@ All changes go through pull requests to `main`, including maintainer changes. [C
 This project was developed with substantial assistance from OpenAI Codex, including implementation, documentation, and debugging. It has been compiled, exercised on the stated hardware, and checked with focused automated tests, but AI-assisted code can contain mistakes. This is an early release, not an independently audited or Apple-certified tool. Please review the source, verify readings that matter to you, and report problems.
 
 The **app itself does not use AI or send data to an AI service**.
+
+## Optional updates and privacy
+
+Use **Check for Updates…** in the gear or right-click menu, or opt in to **Automatically check for updates** in the gear menu for daily checks. Sparkle displays release notes and offers install/relaunch, remind later, or skip. Automatic downloads and silent installation are disabled. With automatic checks off, MyStat makes no background update requests; a manual check still contacts GitHub.
+
+Update traffic is limited to the signed stable feed on GitHub and release downloads (including GitHub’s download CDN). GitHub receives ordinary request metadata such as IP address and updater User-Agent. MyStat sends no metrics, hardware profile, or analytics. Feed and archive signatures are verified with a pinned Ed25519 public key before use. In-app updates require a user-owned writable installation on macOS 26; manual installation remains available.
+
+Existing 0.1.1 installations need one manual upgrade to an updater-enabled release. The initial signed feed contains no updates until a release is published. See [updater design and publishing](docs/UPDATES.md) and [release testing](docs/RELEASE_TESTING.md).
 
 ## Development notes
 

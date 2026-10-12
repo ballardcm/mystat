@@ -25,3 +25,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 The AppleSMC packet ABI and key protocol were cross-checked against [exelban/Stats](https://github.com/exelban/stats/blob/master/SMC/smc.swift). MyStat implements an independent read-only C client and does not include fan-control or SMC write operations.
+
+## Sparkle updater
+
+MyStat bundles [Sparkle 2.10.0](https://github.com/sparkle-project/Sparkle/releases/tag/2.10.0), copyright Sparkle Project and contributors, under its MIT license and bundled third-party licenses. The complete upstream notice is preserved in [ThirdParty/Sparkle-LICENSE.txt](ThirdParty/Sparkle-LICENSE.txt) and copied into the application as `Contents/Resources/Sparkle-LICENSE.txt`.
+
+Sparkle handles update scheduling, authenticated feeds and archives, native update dialogs, download recovery, installation, and relaunch. It is the explicit dependency/network exception to MyStat's otherwise offline design.

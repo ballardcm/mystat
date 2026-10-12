@@ -71,6 +71,7 @@ private final class DashboardPanel: NSPanel {
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let monitor = Monitor()
+    let updates = UpdateController()
     private var item: NSStatusItem!
     private var panel: DashboardPanel!
     private var observers: [NSObjectProtocol] = []
@@ -98,6 +99,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         panel.dismiss = { [weak self] in self?.closePanel() }
         monitor.onUpdate = { [weak self] in self?.updateMenuBar() }
         monitor.start(); updateMenuBar()
+        updates.dismissDashboard = { [weak self] in self?.closePanel() }
+        updates.start()
         observers.append(NotificationCenter.default.addObserver(forName: NSApplication.didResignActiveNotification, object: NSApp, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.closePanel() }
         })
@@ -128,7 +131,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private func showPanel() {
         guard let button = item.button, let statusWindow = button.window else { return }
         if panel.contentViewController == nil {
-            panel.contentViewController = NSHostingController(rootView: Dashboard(monitor: monitor, close: { [weak self] in self?.closePanel() }).clipShape(RoundedRectangle(cornerRadius: 14)))
+            panel.contentViewController = NSHostingController(rootView: Dashboard(monitor: monitor, updates: updates, close: { [weak self] in self?.closePanel() }).clipShape(RoundedRectangle(cornerRadius: 14)))
         }
         let anchor = statusWindow.convertToScreen(button.convert(button.bounds, to: nil))
         let screen = statusWindow.screen?.visibleFrame ?? NSScreen.main!.visibleFrame
@@ -218,14 +221,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         menu.addItem(withTitle: "Open MyStat", action: #selector(openPanel), keyEquivalent: "").target = self
         menu.addItem(withTitle: monitor.paused ? "Resume monitoring" : "Pause monitoring", action: #selector(pause), keyEquivalent: "").target = self
         menu.addItem(.separator())
+        let check = menu.addItem(withTitle: "Check for Updates…", action: #selector(checkForUpdates), keyEquivalent: "")
+        check.target = self
+        check.isEnabled = updates.canCheck
+        menu.autoenablesItems = false
         menu.addItem(withTitle: "Quit MyStat", action: #selector(quit), keyEquivalent: "q").target = self
         item.menu = menu; item.button?.performClick(nil); item.menu = nil
     }
     @objc private func openPanel() { showPanel() }
     @objc private func pause() { monitor.togglePause() }
+    @objc private func checkForUpdates() { updates.checkForUpdates() }
     @objc private func quit() { NSApp.terminate(nil) }
     private func saveSnapshot(_ path: String) {
-        let controller = NSHostingController(rootView: Dashboard(monitor: monitor))
+        let controller = NSHostingController(rootView: Dashboard(monitor: monitor, updates: updates))
         let view = controller.view
         view.frame = NSRect(x: 0, y: 0, width: 424, height: monitor.panelHeight)
         let window = NSWindow(contentRect: view.frame, styleMask: [.borderless], backing: .buffered, defer: false)

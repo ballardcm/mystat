@@ -20,6 +20,8 @@ jobs:
           persist-credentials: false
       - name: Build and package
         run: ./scripts/release.sh
+      - name: Exercise signed update failures and install/relaunch
+        run: ./scripts/test-updates-integration.sh
       - name: Verify artifact checksum
         run: cd dist && shasum -a 256 -c SHA256SUMS
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
