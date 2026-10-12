@@ -6,7 +6,7 @@ MyStat is a small native Swift/SwiftUI monitor for Apple Silicon. CPU activity, 
 
 A native app with no accounts, subscriptions, analytics, or privileged helper. Sparkle is bundled for optional signed updates; automatic checks are off by default. Free to use, change, and share under the [MIT license](LICENSE).
 
-**Built for and tested on macOS 26**, on an M5 Pro MacBook Pro. **macOS 27 support is planned for a later update.** Other chips and OS versions have not yet been hardware-validated; some sensors may be unavailable.
+**Built for and tested on macOS 26**, on an M5 Pro MacBook Pro. In-app updates also work on macOS 27; sensor support there remains experimental. Other chips and OS versions have not yet been hardware-validated; some sensors may be unavailable.
 
 [Download the latest release](https://github.com/ballardcm/mystat/releases/latest) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/ballardcm/mystat/issues)
 
@@ -34,7 +34,7 @@ Click outside, press Escape, click the menu-bar item again, or use × to close. 
 
 ## Install
 
-Download `MyStat-0.1.1-macos-arm64.zip` from [Releases](https://github.com/ballardcm/mystat/releases), unzip it, move `MyStat.app` into Applications, and open it. Look in the menu bar; there is no Dock icon.
+Download the `MyStat-<version>-macos-arm64.zip` asset from the [latest release](https://github.com/ballardcm/mystat/releases/latest), unzip it, move `MyStat.app` into an Applications folder you own, and open it. Look in the menu bar; there is no Dock icon.
 
 This release is **ad-hoc signed, not Developer ID signed or notarized**. macOS may block the first launch. See [installation instructions](INSTALL.md) for Apple's per-app approval steps, checksum verification, updating, and uninstalling. You can also build from source below.
 
@@ -79,7 +79,7 @@ Artifacts are written to `dist/`, which is excluded from Git. The release script
 
 Missing counters display a dash. Invalid units, negative energy deltas, implausible values, and sleep gaps are rejected. Some hardware interfaces are private and may change with macOS updates. CPU and memory collection remain separate from hardware sensor availability.
 
-Experimental macOS 27 CLPC mappings are present in the source, but **macOS 27 is not a supported or validated release target yet**. They will be revisited and tested in a later update. The mapping tests validate identifiers and conversions, not real-world readings on macOS 27.
+Experimental macOS 27 CLPC mappings are present in the source, but **physical sensor compatibility on macOS 27 is not yet validated**. In-app update support is separate from sensor validation. The mapping tests validate identifiers and conversions, not real-world readings on macOS 27.
 
 See [third-party notices](THIRD_PARTY_NOTICES.md) for hardware-interface references and attribution.
 
@@ -99,9 +99,9 @@ The **app itself does not use AI or send data to an AI service**.
 
 Use **Check for Updates…** in the gear or right-click menu, or opt in to **Automatically check for updates** in the gear menu for daily checks. Sparkle displays release notes and offers install/relaunch, remind later, or skip. Automatic downloads and silent installation are disabled. With automatic checks off, MyStat makes no background update requests; a manual check still contacts GitHub.
 
-Update traffic is limited to the signed stable feed on GitHub and release downloads (including GitHub’s download CDN). GitHub receives ordinary request metadata such as IP address and updater User-Agent. MyStat sends no metrics, hardware profile, or analytics. Feed and archive signatures are verified with a pinned Ed25519 public key before use. In-app updates require a user-owned writable installation on macOS 26; manual installation remains available.
+Update traffic is limited to the signed stable feed on GitHub and release downloads (including GitHub’s download CDN). GitHub receives ordinary request metadata such as IP address and updater User-Agent. MyStat sends no metrics, hardware profile, or analytics. Feed and archive signatures are verified with a pinned Ed25519 public key before use. In-app updates require a user-owned writable installation on macOS 26 or 27; manual installation remains available.
 
-Existing 0.1.1 installations need one manual upgrade to an updater-enabled release. The initial signed feed contains no updates until a release is published. See [updater design and publishing](docs/UPDATES.md) and [release testing](docs/RELEASE_TESTING.md).
+Published 0.1.1 installations need one manual upgrade to 0.1.2 or later to obtain the updater. The signed feed offers the latest compatible stable release. See [updater design and publishing](docs/UPDATES.md) and [release testing](docs/RELEASE_TESTING.md).
 
 ## Development notes
 

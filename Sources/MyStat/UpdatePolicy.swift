@@ -24,7 +24,7 @@ enum UpdatePolicy {
     }
 
     static func installationError(at bundleURL: URL, osMajor: Int = ProcessInfo.processInfo.operatingSystemVersion.majorVersion) -> String? {
-        guard osMajor == 26 else { return "In-app updates are supported on macOS 26. Download a compatible release manually." }
+        guard (26...27).contains(osMajor) else { return "In-app updates require macOS 26 or 27. Download a compatible release manually." }
         let fm = FileManager.default
         // Sparkle otherwise offers administrator authorization for protected or differently owned installs.
         // Restrict updates to this user's own, writable, non-translocated app and parent directory.
