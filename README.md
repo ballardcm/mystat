@@ -6,7 +6,7 @@ MyStat is a small native Swift/SwiftUI monitor for Apple Silicon. CPU activity, 
 
 A native app with no accounts, subscriptions, analytics, or privileged helper. Sparkle is bundled for optional signed updates; automatic checks are off by default. Free to use, change, and share under the [MIT license](LICENSE).
 
-**Built for Apple Silicon.** Tested on an M5 Pro MacBook Pro with macOS 26 and 27.0.1, with successful use also reported on an M5 MacBook Air with macOS 26. Sensor support on macOS 27 remains experimental. See [testing details and limitations](docs/testing/2026-10-12-hardware.md).
+**Tested on macOS 26 and 27.0.1 with an M5 Pro MacBook Pro.** Also reported working on an M5 MacBook Air with macOS 26. See [tested configurations and results](docs/testing/2026-10-12-hardware.md).
 
 [Download the latest release](https://github.com/ballardcm/mystat/releases/latest) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/ballardcm/mystat/issues)
 
