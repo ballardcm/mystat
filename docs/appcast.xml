@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><!-- sparkle-sign-warning:
+IMPORTANT: This file was signed by Sparkle. Any modifications to this file requires re-signing this file with generate_appcast or sign_update! The signed signature will be embedded at the end of this file.
+--><rss version="2.0">
+  <channel>
+    <title>MyStat stable updates</title>
+    <link>https://github.com/ballardcm/mystat/releases</link>
+    <description>Stable releases for Apple Silicon on macOS 26.</description>
+  </channel>
+</rss><!-- sparkle-signatures:
+edSignature: B9WebknVu+Ad1LtDzD73uDShEE1fXiLuPW9LehFk2nWFfE0EU8nMlCQ3oaaesSkgReR9gg5vDtmCitDYk0GuBQ==
+length: 523
+-->

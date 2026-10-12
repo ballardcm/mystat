@@ -31,3 +31,11 @@ xcuserdata/
 /.codex/
 /.agents/
 /.aws/
+
+# VM disks, restore images, and Python test caches
+*.ipsw
+*.macvm/
+*.pvm/
+*.hdd/
+__pycache__/
+*.pyc

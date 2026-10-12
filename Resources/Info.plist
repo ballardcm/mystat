@@ -12,4 +12,15 @@
 <key>LSUIElement</key><true/>
 <key>NSHighResolutionCapable</key><true/>
 <key>NSPrincipalClass</key><string>NSApplication</string>
+<key>SUFeedURL</key><string>https://raw.githubusercontent.com/ballardcm/mystat/main/docs/appcast.xml</string>
+<key>SUPublicEDKey</key><string>G3imSpIWMysfkGfPFEPws731qB9KeBDaKmjIaKFUOVs=</string>
+<key>SUEnableAutomaticChecks</key><false/>
+<key>SUAutomaticallyUpdate</key><false/>
+<key>SUAllowsAutomaticUpdates</key><false/>
+<key>SUScheduledCheckInterval</key><integer>86400</integer>
+<key>SUEnableSystemProfiling</key><false/>
+<key>SUEnableJavaScript</key><false/>
+<key>SUVerifyUpdateBeforeExtraction</key><true/>
+<key>SURequireSignedFeed</key><true/>
+<key>SUSignedFeedFailureExpirationInterval</key><integer>0</integer>
 </dict></plist>

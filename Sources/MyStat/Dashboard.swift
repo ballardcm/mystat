@@ -12,6 +12,7 @@ private let gpuColor = Color(red: 0.27, green: 0.85, blue: 0.69)
 
 struct Dashboard: View {
     @ObservedObject var monitor: Monitor
+    @ObservedObject var updates: UpdateController
     var close: () -> Void = {}
     @State private var loginEnabled = SMAppService.mainApp.status == .enabled
     @State private var loginError: String?
@@ -175,6 +176,8 @@ struct Dashboard: View {
                     Button { monitor.setInterval(seconds) } label: { Text("\(Int(seconds)) seconds" + (monitor.interval == seconds ? " ✓" : "")) }
                 }
             } label: { Text("\(Int(monitor.interval))s refresh").font(.system(size: 10)) }.menuStyle(.borderlessButton).fixedSize()
+            Text("Version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown")")
+                .font(.system(size: 10)).lineLimit(1)
             Spacer()
             Button { withAnimation { showInfo.toggle() } } label: { Image(systemName: "info.circle") }.help("About these readings")
             Button { monitor.togglePause() } label: { Image(systemName: monitor.paused ? "play" : "pause") }.help(monitor.paused ? "Resume monitoring" : "Pause monitoring")
@@ -186,6 +189,11 @@ struct Dashboard: View {
                         if SMAppService.mainApp.status == .requiresApproval { SMAppService.openSystemSettingsLoginItems() }
                     } catch { loginError = error.localizedDescription }
                 }))
+                Divider()
+                Toggle("Automatically check for updates", isOn: Binding(get: { updates.automaticallyChecks }, set: { updates.setAutomaticChecks($0) }))
+                Button("Check for Updates…") { updates.checkForUpdates() }.disabled(!updates.canCheck)
+                Button("Open MyStat Releases…") { NSWorkspace.shared.open(UpdatePolicy.releasesURL) }
+                Divider()
                 Button("Open Activity Monitor") { NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Applications/Utilities/Activity Monitor.app")) }
                 Divider()
                 Button("Quit MyStat") { NSApp.terminate(nil) }.keyboardShortcut("q")

@@ -24,11 +24,19 @@ The result should be `MyStat-0.1.1-macos-arm64.zip: OK`. A checksum detects mism
 
 ## Update
 
-Quit MyStat from its right-click menu or dropdown settings. Replace the app in Applications with the new version, then reopen it. MyStat does not download updates automatically.
+For 0.1.1, quit MyStat, replace the app in Applications with the new version, then reopen it. This one-time manual upgrade is required to obtain the updater.
+
+Updater-enabled builds offer **Check for Updates…** in the right-click and gear menus. You can optionally enable **Automatically check for updates** in the gear menu; it is off by default and checks about once per day. Review the version and release notes, then install and relaunch, defer, or skip. Downloads begin only after choosing Install; installation preserves preferences and the app's location.
+
+Checks and downloads contact GitHub and its download CDN; system profiling and telemetry are disabled. Both the feed and downloaded archive must have valid signatures. If offline, verification fails, or the installation is not user-owned and writable, keep using the installed version or update manually. Move the app out of the downloaded ZIP/disk image into an Applications folder you own before using in-app updates. Updates do not require administrator authorization or a privileged helper. macOS 26 is the supported update target.
+
+After an update has been downloaded and prepared, Sparkle may install it when you quit even if you defer the relaunch. Turning off automatic checks stops future scheduled checks; it does not cancel an update already in progress. Use Cancel/Skip in the updater to abandon that update.
+
+The signed update feed starts empty. No update is offered until an updater-compatible stable release is published.
 
 ## Uninstall
 
-Turn off **Launch at login** if enabled, quit MyStat, and move the app to Trash. There are no privileged helpers, launch daemons, or installed extensions. The app stores its sampling preference in macOS user defaults under `io.github.ballardcm.MyStat`; if desired, remove those preferences after quitting:
+Turn off **Launch at login** if enabled, quit MyStat, and move the app to Trash. There are no privileged helpers, launch daemons, or installed extensions. The app stores sampling and update preferences in macOS user defaults under `io.github.ballardcm.MyStat`; if desired, remove those preferences after quitting:
 
 ```sh
 defaults delete io.github.ballardcm.MyStat

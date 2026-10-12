@@ -13,9 +13,9 @@ Pull requests are welcome, including small fixes and first contributions. Help k
 
 macOS 26 on Apple Silicon is the current target. macOS 27 support will be updated later; experimental mappings do not establish support. Reports and PRs for new hardware are welcome, with actual measurements and clearly stated limitations.
 
-Favor system frameworks and small, bounded background work. Avoid adding runtime dependencies, networking, telemetry, subprocess polling, or privileged helpers without discussing the need first. Missing sensor data must stay unavailable rather than becoming a plausible-looking zero.
+Favor system frameworks and small, bounded background work. Sparkle is the approved bundled dependency for signed updates, with networking only for manual checks or explicitly opted-in scheduled checks and user-approved downloads. Do not add other runtime dependencies, network traffic, telemetry, subprocess polling, or privileged helpers. Automatic checks must remain off by default. Missing sensor data must stay unavailable rather than becoming a plausible-looking zero.
 
-Add focused tests when behavior warrants them. Hardware tests cannot prove physical sensor accuracy; include manual checks for sensor changes. For UI changes, attach screenshots containing only the app.
+Run `./scripts/test-updates-integration.sh` for updater changes; it uses disposable apps, ephemeral signing keys, and a localhost server. Follow [release testing](docs/RELEASE_TESTING.md) in a clean macOS VM before each release, and preserve host hardware validation for sensors. Add focused tests when behavior warrants them. Hardware tests cannot prove physical sensor accuracy; include manual checks for sensor changes. For UI changes, attach screenshots containing only the app.
 
 ## Privacy and AI assistance
 
