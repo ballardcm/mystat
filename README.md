@@ -34,7 +34,7 @@ Click outside, press Escape, click the menu-bar item again, or use × to close. 
 
 ## Install
 
-Download `MyStat-0.1.1-macos-arm64.zip` from [Releases](https://github.com/ballardcm/mystat/releases), unzip it, move `MyStat.app` into Applications, and open it. Look in the menu bar; there is no Dock icon.
+Download the `MyStat-<version>-macos-arm64.zip` asset from the [latest release](https://github.com/ballardcm/mystat/releases/latest), unzip it, move `MyStat.app` into an Applications folder you own, and open it. Look in the menu bar; there is no Dock icon.
 
 This release is **ad-hoc signed, not Developer ID signed or notarized**. macOS may block the first launch. See [installation instructions](INSTALL.md) for Apple's per-app approval steps, checksum verification, updating, and uninstalling. You can also build from source below.
 
@@ -101,7 +101,7 @@ Use **Check for Updates…** in the gear or right-click menu, or opt in to **Aut
 
 Update traffic is limited to the signed stable feed on GitHub and release downloads (including GitHub’s download CDN). GitHub receives ordinary request metadata such as IP address and updater User-Agent. MyStat sends no metrics, hardware profile, or analytics. Feed and archive signatures are verified with a pinned Ed25519 public key before use. In-app updates require a user-owned writable installation on macOS 26; manual installation remains available.
 
-Existing 0.1.1 installations need one manual upgrade to an updater-enabled release. The initial signed feed contains no updates until a release is published. See [updater design and publishing](docs/UPDATES.md) and [release testing](docs/RELEASE_TESTING.md).
+Published 0.1.1 installations need one manual upgrade to 0.1.2 or later to obtain the updater. The signed feed offers the latest compatible stable release. See [updater design and publishing](docs/UPDATES.md) and [release testing](docs/RELEASE_TESTING.md).
 
 ## Development notes
 

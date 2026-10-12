@@ -4,8 +4,8 @@ MyStat is built for and tested on **Apple Silicon running macOS 26**. macOS 27 s
 
 ## Download and open
 
-1. Download `MyStat-0.1.1-macos-arm64.zip` from the [GitHub release](https://github.com/ballardcm/mystat/releases/latest).
-2. Double-click the ZIP, then drag `MyStat.app` into Applications.
+1. Download the `MyStat-<version>-macos-arm64.zip` asset from the [latest GitHub release](https://github.com/ballardcm/mystat/releases/latest).
+2. Double-click the ZIP, then drag `MyStat.app` into an Applications folder you own, such as `~/Applications`.
 3. Open MyStat. Its CPU / MEM / GPU display appears in your menu bar; it has no Dock icon.
 4. Click the display to see details. MEM is **memory pressure**; the dropdown also shows the percentage of physical memory used.
 5. Optional: use the dropdown's gear menu to enable **Launch at login** after placing the app in its permanent location.
@@ -20,11 +20,11 @@ Download `SHA256SUMS` from the same release and place it beside the ZIP. In Term
 shasum -a 256 -c SHA256SUMS
 ```
 
-The result should be `MyStat-0.1.1-macos-arm64.zip: OK`. A checksum detects mismatched or corrupted downloads; it is not a substitute for trusting the release source.
+The result should show your downloaded ZIP's filename followed by `OK`. A checksum detects mismatched or corrupted downloads; it is not a substitute for trusting the release source.
 
 ## Update
 
-For 0.1.1, quit MyStat, replace the app in Applications with the new version, then reopen it. This one-time manual upgrade is required to obtain the updater.
+For the published 0.1.1 release, quit MyStat, replace the app in Applications with 0.1.2 or later, then reopen it. This one-time manual upgrade is required to obtain the updater.
 
 Updater-enabled builds offer **Check for Updates…** in the right-click and gear menus. You can optionally enable **Automatically check for updates** in the gear menu; it is off by default and checks about once per day. Review the version and release notes, then install and relaunch, defer, or skip. Downloads begin only after choosing Install; installation preserves preferences and the app's location.
 
@@ -32,7 +32,7 @@ Checks and downloads contact GitHub and its download CDN; system profiling and t
 
 After an update has been downloaded and prepared, Sparkle may install it when you quit even if you defer the relaunch. Turning off automatic checks stops future scheduled checks; it does not cancel an update already in progress. Use Cancel/Skip in the updater to abandon that update.
 
-The signed update feed starts empty. No update is offered until an updater-compatible stable release is published.
+The signed update feed offers the latest compatible stable release. If you already have it, a manual check reports that MyStat is up to date.
 
 ## Uninstall
 
