@@ -6,7 +6,7 @@ struct MenuBarMeterTests {
     static func main() throws {
         let states = ["0%", "9%", "10%", "99%", "100%", "Ⅱ", "—"]
         let reference = MenuBarMeter.image(texts: ["100%", "100%", "100%"])
-        precondition(reference.size == NSSize(width: 107, height: 22), "Compact meter geometry changed")
+        precondition(reference.size == NSSize(width: 89, height: 22), "Compact meter geometry changed")
         // Vary all columns independently, including startup/missing and pause states.
         for cpu in states {
             for memory in states {
@@ -17,33 +17,31 @@ struct MenuBarMeterTests {
                 }
             }
         }
-        // Compare the rendered percent-sign pixels, not just the text layout arithmetic.
-        // A left-aligned implementation has the same image size but fails this check.
+        // Inspect the actual ink: a stable image size alone cannot verify centering.
         for scale in [1, 2] {
-            let baseline = bitmap(reference, scale: scale)
-            for column in 0..<3 {
-                let captionBounds = inkBounds(baseline, column: column, rows: 0..<10 * scale, scale: scale, label: "Caption")
-                let columnRight = ((33 + 4) * column + 33) * scale
-                precondition(abs(Double(captionBounds.upperBound - columnRight)) <= 1.5 * Double(scale),
-                             "Caption right edge moved in column \(column), scale \(scale)")
-                let captionCenter = Double(captionBounds.lowerBound + captionBounds.upperBound) / 2
-                for symbol in ["Ⅱ", "—"] {
-                    let rendered = bitmap(MenuBarMeter.image(texts: [symbol, symbol, symbol]), scale: scale)
-                    let symbolBounds = inkBounds(rendered, column: column, rows: 10 * scale..<22 * scale, scale: scale, label: symbol)
-                    let symbolCenter = Double(symbolBounds.lowerBound + symbolBounds.upperBound) / 2
-                    precondition(abs(symbolCenter - captionCenter) <= 1.5 * Double(scale),
-                                 "\(symbol) off center beneath caption in column \(column), scale \(scale): \(symbolCenter) vs \(captionCenter)")
-                }
-            }
-            for value in ["0%", "9%", "14%", "99%"] {
+            for value in states {
                 let rendered = bitmap(MenuBarMeter.image(texts: [value, value, value]), scale: scale)
                 for column in 0..<3 {
-                    // The last five points of each number contain its percent sign.
-                    let right = Int((reference.size.width - 8) / 3) * (column + 1) + 4 * column
-                    for x in ((right - 5) * scale)..<(right * scale) {
-                        for y in 10 * scale..<22 * scale {
-                            precondition(rendered.colorAt(x: x, y: y) == baseline.colorAt(x: x, y: y),
-                                         "Percent sign moved at \(value), column \(column), scale \(scale)")
+                    let left = (27 + 4) * column * scale
+                    let right = left + 27 * scale
+                    let cellCenter = Double(left + right) / 2
+                    for (label, rows) in [("Caption", 0..<10 * scale), (value, 10 * scale..<22 * scale)] {
+                        let bounds = inkBounds(rendered, column: column, rows: rows, scale: scale, label: label)
+                        let inkCenter = Double(bounds.lowerBound + bounds.upperBound) / 2
+                        precondition(abs(inkCenter - cellCenter) <= 1.5 * Double(scale),
+                                     "\(label) off center in column \(column), scale \(scale): \(inkCenter) vs \(cellCenter)")
+                        precondition(bounds.lowerBound >= left && bounds.upperBound <= right,
+                                     "\(label) leaves column bounds in column \(column), scale \(scale)")
+                    }
+                }
+                // Every column displays the same glyph, so transparent interior gaps
+                // also catch overflow that would be cropped at the image's outer edges.
+                for column in 0..<2 {
+                    let gapStart = ((27 + 4) * column + 27) * scale
+                    for x in gapStart..<(gapStart + 4 * scale) {
+                        for y in 0..<22 * scale {
+                            precondition((rendered.colorAt(x: x, y: y)?.alphaComponent ?? 0) <= 0.1,
+                                         "\(value) spills into column gap at scale \(scale)")
                         }
                     }
                 }
@@ -105,7 +103,7 @@ struct MenuBarMeterTests {
             let data = bitmap(preview, scale: 2).representation(using: .png, properties: [:])!
             try data.write(to: URL(fileURLWithPath: CommandLine.arguments[index + 1]))
         }
-        print("PASS: 343 menu-bar state combinations keep \(reference.size.width) × \(reference.size.height) points; percent signs stay aligned at 1× and 2×")
+        print("PASS: 343 menu-bar state combinations keep \(reference.size.width) × \(reference.size.height) points; captions and values stay centered without clipping at 1× and 2×")
         if CommandLine.arguments.contains("--review") {
             let review = MeterReview()
             review.run()
@@ -199,7 +197,7 @@ final class MeterReview: NSObject, NSWindowDelegate {
                 label.textColor = dark ? .white : .black
                 label.frame = NSRect(x: 12, y: 72 - (scale - 1) * 40, width: 88, height: 20)
                 box.contentView?.addSubview(label)
-                let view = NSImageView(frame: NSRect(x: 112, y: 72 - (scale - 1) * 40, width: 107, height: 22))
+                let view = NSImageView(frame: NSRect(x: 112, y: 72 - (scale - 1) * 40, width: 89, height: 22))
                 view.imageScaling = .scaleNone
                 view.contentTintColor = dark ? .white : .black
                 box.contentView?.addSubview(view)
@@ -207,7 +205,7 @@ final class MeterReview: NSObject, NSWindowDelegate {
             }
         }
         geometry = addLabel("", x: 20, y: 78, width: 520)
-        addLabel("Both rasters retain the actual 107 × 22 point footprint.\nClose this window to remove both fixture menu-bar items.", x: 20, y: 22, width: 520, height: 44)
+        addLabel("Both rasters retain the actual 89 × 22 point footprint.\nClose this window to remove both fixture menu-bar items.", x: 20, y: 22, width: 520, height: 44)
         setState(0)
         window.center()
         window.makeKeyAndOrderFront(nil)
