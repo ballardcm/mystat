@@ -42,7 +42,7 @@ PY
     xcrun stapler staple build/MyStat.app
 fi
 if [[ "$MODE" != --adhoc ]]; then
-    codesign --verify --deep --strict --test-requirement='anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists' build/MyStat.app
+    codesign --verify --deep --strict --test-requirement='=anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists' build/MyStat.app
     xcrun stapler validate build/MyStat.app
     spctl --assess --type execute --verbose=2 build/MyStat.app
 fi

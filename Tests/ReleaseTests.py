@@ -55,6 +55,18 @@ class ReleaseTests(unittest.TestCase):
     def commands(self):
         return [json.loads(line) for line in self.log.read_text().splitlines()]
 
+    def assert_valid_requirements(self):
+        # Use Apple's real parser: mocks alone cannot catch treating an inline
+        # requirement as a filename (codesign requires a leading equals sign).
+        requirements = [arg.split('=', 1)[1] for command in self.commands()
+                        for arg in command if arg.startswith('--test-requirement=')]
+        self.assertTrue(requirements)
+        for requirement in requirements:
+            result = subprocess.run(['/usr/bin/csreq', '-r', requirement, '-b',
+                                     str(self.root / 'compiled-requirement')],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_missing_identity_fails_before_build(self):
         del self.env['MYSTAT_SIGN_IDENTITY']
         self.assertNotEqual(self.run_script().returncode, 0)
@@ -84,6 +96,7 @@ class ReleaseTests(unittest.TestCase):
         self.assertLess(staple, assess)
         self.assertLess(assess, archive)
         self.assertTrue((self.root / 'dist/SHA256SUMS').is_file())
+        self.assert_valid_requirements()
 
     def test_resume_rechecks_ticket_without_build_or_submission(self):
         self.env['RELEASE_TEST_FAIL'] = 'xcrun stapler validate'
@@ -102,6 +115,7 @@ class ReleaseTests(unittest.TestCase):
     def test_nested_distribution_code_gets_runtime_and_timestamp(self):
         result = self.run_script('sign-app.sh', 'MyStat.app')
         self.assertEqual(result.returncode, 0, result.stderr)
+        self.assert_valid_requirements()
         signed = [c for c in self.commands() if '--sign' in c]
         self.assertEqual([pathlib.Path(c[-1]).name for c in signed],
                          ['Autoupdate', 'Updater.app', 'Sparkle.framework', 'MyStat.app'])
