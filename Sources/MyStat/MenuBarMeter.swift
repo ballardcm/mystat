@@ -17,7 +17,8 @@ enum MenuBarMeter {
     private static let widths = labels.map {
         ceil(max(($0 as NSString).size(withAttributes: caption).width, numberWidth))
     }
-    private static let gap: CGFloat = 8
+    // Keep the groups compact without shrinking the reserved three-digit cells.
+    private static let gap: CGFloat = 4
 
     static func image(texts: [String]) -> NSImage {
         precondition(texts.count == labels.count)
@@ -26,13 +27,17 @@ enum MenuBarMeter {
             var x: CGFloat = 0
             for index in labels.indices {
                 let label = labels[index] as NSString
-                let captionX = x + (widths[index] - label.size(withAttributes: caption).width) / 2
+                let captionWidth = label.size(withAttributes: caption).width
+                let captionX = x + widths[index] - captionWidth
                 label.draw(at: NSPoint(x: captionX, y: 12), withAttributes: caption)
                 let text = texts[index] as NSString
                 let remaining = widths[index] - text.size(withAttributes: number).width
                 // Numeric readings keep their percent signs aligned. Standalone state
-                // symbols belong under the caption, not against the column's right edge.
-                let numberX = x + (texts[index] == "Ⅱ" || texts[index] == "—" ? remaining / 2 : remaining)
+                // symbols stay under the fixed caption center, even though the cell
+                // also reserves the extra digit that is rarely needed for 100%.
+                let numberX = texts[index] == "Ⅱ" || texts[index] == "—"
+                    ? captionX + (captionWidth - text.size(withAttributes: number).width) / 2
+                    : x + remaining
                 text.draw(at: NSPoint(x: numberX, y: 0), withAttributes: number)
                 x += widths[index] + gap
             }
