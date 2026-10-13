@@ -7,3 +7,4 @@
 - Preserve the MIT license and third-party attribution. Disclose substantial AI assistance.
 - Review `.gitignore` and staged files before publishing. Never commit `build/`, `dist/`, raw diagnostics, credentials, or screenshots of unrelated apps.
 - Run appropriate build/tests. Sensor compatibility requires hardware validation in addition to unit tests.
+- Before Developer ID signing or notarization, build an ad-hoc candidate and visually test the actual app on macOS 26 at normal and small display sizes, including resizing while the dropdown is open. Check menu-bar alignment across digit changes, pause, and unavailable states; check the entire panel, dismissal, light/dark appearance, and settings. Record the exact source revision and observed results. Unit tests and rendered fixtures do not replace this pass. Any later UI change requires repeating the affected visual checks before signing.

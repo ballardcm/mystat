@@ -16,13 +16,29 @@ Keep both clean OS baselines after successful upgrade tests, shut down between t
 
 Host home, cloud folders, application sharing, shared clipboard, and automatic volume sharing should be disabled for both baselines. Keep Apple Account sign-in out of these disposable guests. Record the exact guest OS build and verify all settings rather than assuming a clone or a new OS version preserves them.
 
+## Before signing: qualify the actual UI
+
+Do this **before the first Developer ID signature or Apple submission**, using an ad-hoc candidate in the disposable macOS 26 test VM. First build with `./scripts/release.sh --adhoc` and run `./scripts/test-updates-integration.sh`. Use the established per-app approval flow for this local test build; do not disable Gatekeeper globally. This development pass is separate from the later quarantined notarized-install check.
+
+- Inspect the actual menu-bar display with one-, two-, and three-digit readings, pause, and unavailable values. Confirm caption/value alignment and stable neighboring icons. Use the live meter fixture to force states unavailable on the VM, alongside the actual app.
+- Before inspecting each host or VM, match the installed executable's SHA-256 to the candidate, then relaunch and verify the running process path. Version/build labels alone are insufficient when multiple candidates share them. Record which candidate each VM is running.
+- Open the dropdown at a normal desktop size and a smaller VM display (for example, 800 × 600). Resize the VM while it is open, close/reopen, and confirm that the full header/footer remain visible below the menu bar and above the Dock. Scrolling must reach every section without clipped controls.
+- Check light/dark appearance, gear and right-click menus, pause/resume, sampling settings, Escape, close-button, and outside-click dismissal.
+- Record the exact source revision (and any uncommitted candidate diff), OS/display sizes, observed results, and defects. Fix defects and repeat affected checks before signing. Unit tests, static screenshots, and notarization acceptance are not substitutes for this visual pass.
+
+Only then continue with Developer ID signing, Apple submission, and the signed clean-install/upgrade checks below. Any later UI change returns to this pre-signing stage.
+
 ## Build and automated checks
+
+Configure the signing identity and notarization Keychain profile as described in [SIGNING.md](SIGNING.md). Official archives require the complete Apple verification path. For development/CI without credentials, use `./scripts/release.sh --adhoc` and check `dist/adhoc/SHA256SUMS`; this does not qualify a release.
 
 ```sh
 ./scripts/release.sh
 ./scripts/test-updates-integration.sh
 (cd dist && shasum -a 256 -c SHA256SUMS)
 codesign --verify --deep --strict build/MyStat.app
+xcrun stapler validate build/MyStat.app
+spctl --assess --type execute --verbose=2 build/MyStat.app
 ```
 
 The integration suite runs an ephemeral localhost server and replaces/relaunches only uniquely identified disposable fixture apps. It does not install a MyStat release, change the real MyStat defaults, or use the production signing key. Run it on the host and in the test VM when tooling is available.
@@ -52,7 +68,7 @@ Use a separate clone with the previous updater-enabled release installed. Set a 
 4. Install and relaunch. Verify the new dropdown version, exactly one running instance, preserved sampling settings, the original app path, and working launch at login after guest logout/login.
 5. Check again: no further update offered. Turn off automatic checks and reopen: preference remains off.
 6. Use a clone to test an unwritable or differently owned install; expect manual-update guidance before downloading, with no administrator prompt. Restore permissions and confirm checks work again.
-7. Test a quarantined candidate under normal macOS protections, as well as a standard user's writable `~/Applications` installation. Record Gatekeeper/ad-hoc-signature behavior explicitly.
+7. Test a quarantined candidate under normal macOS protections, as well as a standard user's writable `~/Applications` installation. For 0.2.0 onward, require Developer ID/Gatekeeper acceptance and a valid stapled notarization ticket without an Open Anyway override. Record the 0.1.3 ad-hoc → Developer ID transition and launch-at-login continuity explicitly.
 
 Version 0.1.1 has no updater: test its manual replacement with the first updater-enabled release separately.
 

@@ -18,7 +18,6 @@ ditto "$SPARKLE_DIR/Sparkle.framework" build/MyStat.app/Contents/Frameworks/Spar
 # This app is not sandboxed and does not use Sparkle's optional XPC services.
 rm -rf build/MyStat.app/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices
 cp "$SPARKLE_DIR/LICENSE" build/MyStat.app/Contents/Resources/Sparkle-LICENSE.txt
-codesign --force --sign - build/MyStat.app/Contents/Frameworks/Sparkle.framework
 cp Resources/Info.plist build/MyStat.app/Contents/Info.plist
-codesign --force --sign - build/MyStat.app
+./scripts/sign-app.sh build/MyStat.app
 printf 'Built %s/build/MyStat.app\n' "$PWD"

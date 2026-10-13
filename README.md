@@ -6,7 +6,7 @@ MyStat is a small native Swift/SwiftUI monitor for Apple Silicon. CPU activity, 
 
 A native app with no accounts, subscriptions, analytics, or privileged helper. Sparkle is bundled for optional signed updates; automatic checks are off by default. Free to use, change, and share under the [MIT license](LICENSE).
 
-**Tested on macOS 26 and 27.0.1 with an M5 Pro MacBook Pro.** Also reported working on an M5 MacBook Air with macOS 26. See [tested configurations and results](docs/testing/2026-10-12-hardware.md).
+**Built and tested for macOS 26 on Apple Silicon.** Tested on an M5 Pro MacBook Pro and reported working on an M5 MacBook Air. macOS 27 hardware checks remain experimental. See [tested configurations and results](docs/testing/2026-10-12-hardware.md).
 
 [Download the latest release](https://github.com/ballardcm/mystat/releases/latest) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/ballardcm/mystat/issues)
 
@@ -36,7 +36,7 @@ Click outside, press Escape, click the menu-bar item again, or use × to close. 
 
 Download the `MyStat-<version>-macos-arm64.zip` asset from the [latest release](https://github.com/ballardcm/mystat/releases/latest), unzip it, move `MyStat.app` into an Applications folder you own, and open it. Look in the menu bar; there is no Dock icon.
 
-This release is **ad-hoc signed, not Developer ID signed or notarized**. macOS may block the first launch. See [installation instructions](INSTALL.md) for Apple's per-app approval steps, checksum verification, updating, and uninstalling. You can also build from source below.
+Starting with **0.2.0, official releases are Developer ID signed and notarized by Apple**. See [installation instructions](INSTALL.md) for checksum verification, updating, uninstalling, and guidance for older ad-hoc releases. You can also build from source below.
 
 ## Build from source
 
@@ -57,13 +57,13 @@ The first release was built with Swift 6.3.3 and the macOS 26.5 SDK, and tested 
 
 Quit the running copy before opening a rebuilt app. Copy it to Applications before enabling launch at login, so its location remains stable.
 
-Package a release, including the license, install guide, and SHA-256 checksum:
+Package an ad-hoc test build, including the license, install guide, and SHA-256 checksum:
 
 ```sh
-./scripts/release.sh
+./scripts/release.sh --adhoc
 ```
 
-Artifacts are written to `dist/`, which is excluded from Git. The release script runs the hardware tests, builds the app, checks its signature, and packages only the intended deliverables.
+Ad-hoc test artifacts are written to `dist/adhoc/`, which is excluded from Git. The release script runs the hardware tests, builds the app, checks its signature, and packages only the intended deliverables. Official releases use [Developer ID signing and notarization](docs/SIGNING.md); running `./scripts/release.sh` without `--adhoc` requires the signing identity and notarization Keychain profile and produces an archive only after Apple acceptance and local verification.
 
 ## Measurements and compatibility
 

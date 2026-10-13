@@ -19,15 +19,15 @@ jobs:
         with:
           persist-credentials: false
       - name: Build and package
-        run: ./scripts/release.sh
+        run: ./scripts/release.sh --adhoc
       - name: Exercise signed update failures and install/relaunch
         run: ./scripts/test-updates-integration.sh
       - name: Verify artifact checksum
-        run: cd dist && shasum -a 256 -c SHA256SUMS
+        run: cd dist/adhoc && shasum -a 256 -c SHA256SUMS
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: MyStat-macos-arm64
+          name: MyStat-macos-arm64-adhoc-test-only
           path: |
-            dist/*.zip
-            dist/SHA256SUMS
+            dist/adhoc/*.zip
+            dist/adhoc/SHA256SUMS
           if-no-files-found: error
