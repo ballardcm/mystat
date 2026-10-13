@@ -94,11 +94,37 @@ def main():
             run(TOOLS / 'sign_update', '--ed-key-file', keyfile, path, capture_output=True)
             return path
 
-        def check(name, expected):
-            run(harness / 'Contents/MacOS/Fixture', target, origin + '/' + name, expected, timeout=55)
-            info = plistlib.loads((target / 'Contents/Info.plist').read_bytes())
+        def check(name, expected, checked_target=target):
+            run(harness / 'Contents/MacOS/Fixture', checked_target, origin + '/' + name, expected, timeout=55)
+            info = plistlib.loads((checked_target / 'Contents/Info.plist').read_bytes())
             assert info['CFBundleVersion'] == ('2' if expected == 'installed' else '1'), name
-            assert (target / 'Contents/MacOS/Fixture').exists(), name
+            assert (checked_target / 'Contents/MacOS/Fixture').exists(), name
+            if checked_target != target:
+                marker = checked_target.parent / 'launched-1'
+                process = subprocess.Popen([str(checked_target / 'Contents/MacOS/Fixture')])
+                try:
+                    for _ in range(100):
+                        if marker.exists() or process.poll() is not None:
+                            break
+                        time.sleep(0.1)
+                    assert process.poll() is None, f'{name}: original app exited after rejected update'
+                    assert marker.read_text() == '5', f'{name}: original app did not launch normally'
+                finally:
+                    if process.poll() is None:
+                        process.terminate()
+                    process.wait(timeout=5)
+
+        # Installer shutdown can outlive the updater cycle. Give installation and
+        # download failures distinct host identities so a lingering installer
+        # cannot divert a later scenario into Sparkle's resume path.
+        isolated_identifiers = []
+
+        def isolated_target(name):
+            scenario_identifier = identifier + '.' + name
+            isolated_identifiers.append(scenario_identifier)
+            bundle = root / name / 'Target.app'
+            make_bundle(bundle, scenario_identifier, 1, public, BASE / 'Fixture')
+            return bundle
 
         target_process = None
         try:
@@ -119,8 +145,10 @@ def main():
             feed('cancel.xml'); check('cancel.xml', 'cancel')
             path = feed('tampered.xml'); path.write_bytes(path.read_bytes().replace(b'Test release notes', b'Fake release notes'))
             check('tampered.xml', 'error')
-            feed('bad-archive.xml', bad_signature=True); check('bad-archive.xml', 'error')
-            feed('missing.xml', missing=True); check('missing.xml', 'error')
+            feed('bad-archive.xml', bad_signature=True)
+            check('bad-archive.xml', 'error', isolated_target('BadArchiveTarget'))
+            feed('missing.xml', missing=True)
+            check('missing.xml', 'error', isolated_target('MissingDownloadTarget'))
             check('nonexistent.xml', 'error')
             target_process = subprocess.Popen([str(target / 'Contents/MacOS/Fixture')])
             for _ in range(100):
@@ -144,6 +172,8 @@ def main():
             subprocess.run(['/usr/bin/pkill', '-f', str(target / 'Contents/MacOS/Fixture')], check=False)
             subprocess.run(['/usr/bin/defaults', 'delete', identifier], capture_output=True)
             subprocess.run(['/usr/bin/defaults', 'delete', identifier + '.harness'], capture_output=True)
+            for scenario_identifier in isolated_identifiers:
+                subprocess.run(['/usr/bin/defaults', 'delete', scenario_identifier], capture_output=True)
 
 
 if __name__ == '__main__':

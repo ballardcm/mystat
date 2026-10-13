@@ -6,6 +6,7 @@
 @property NSString *feed;
 @property NSString *expected;
 @property SPUUpdater *updater;
+@property (copy) NSString *pendingResult;
 @end
 @implementation TestDriver
 - (void)finish:(NSString *)result {
@@ -13,6 +14,16 @@
     fprintf(stderr, "Expected %s, got %s\n", self.expected.UTF8String, result.UTF8String); exit(1);
 }
 - (void)updater:(SPUUpdater *)updater didFinishUpdateCycleForUpdateCheck:(SPUUpdateCheck)check error:(NSError *)error {
+    // Sparkle's reply/acknowledgement blocks enqueue teardown on the main queue.
+    // Exiting inside a user-driver callback skips that teardown and can leave an
+    // installer that the next check mistakenly tries to resume.
+    if (self.pendingResult != nil) {
+        if (![self.pendingResult isEqualToString:@"error"] && error != nil) {
+            fprintf(stderr, "Unexpected cycle error: %s\n", error.description.UTF8String);
+            [self finish:@"cleanup-error"];
+        }
+        [self finish:self.pendingResult];
+    }
     if ([self.expected isEqualToString:@"background"] && check == SPUUpdateCheckUpdatesInBackground) {
         if (error != nil && error.code != SUNoUpdateError) { [self finish:@"background-error"]; }
         updater.automaticallyChecksForUpdates = NO;
@@ -23,7 +34,7 @@
 - (void)showUpdatePermissionRequest:(SPUUpdatePermissionRequest *)request reply:(void (^)(SUUpdatePermissionResponse *))reply { [self finish:@"unexpected-permission"]; }
 - (void)showUserInitiatedUpdateCheckWithCancellation:(void (^)(void))cancellation {}
 - (void)showUpdateFoundWithAppcastItem:(SUAppcastItem *)item state:(SPUUserUpdateState *)state reply:(void (^)(SPUUserUpdateChoice))reply {
-    if ([self.expected isEqualToString:@"defer"]) { reply(SPUUserUpdateChoiceDismiss); [self finish:@"defer"]; }
+    if ([self.expected isEqualToString:@"defer"]) { self.pendingResult = @"defer"; reply(SPUUserUpdateChoiceDismiss); }
     else { reply(SPUUserUpdateChoiceInstall); }
 }
 - (void)showUpdateReleaseNotesWithDownloadData:(SPUDownloadData *)data {}
@@ -35,10 +46,11 @@
     NSInteger expectedCode = [self.feed containsString:@"tampered.xml"] ? 1000 :
         [self.feed containsString:@"bad-archive.xml"] ? 4005 : 2001;
     if (error.code != expectedCode) { [self finish:@"wrong-error"]; }
-    ack(); [self finish:@"error"];
+    self.pendingResult = @"error";
+    ack();
 }
 - (void)showDownloadInitiatedWithCancellation:(void (^)(void))cancellation {
-    if ([self.expected isEqualToString:@"cancel"]) { cancellation(); [self finish:@"cancel"]; }
+    if ([self.expected isEqualToString:@"cancel"]) { self.pendingResult = @"cancel"; cancellation(); }
 }
 - (void)showDownloadDidReceiveExpectedContentLength:(uint64_t)length {}
 - (void)showDownloadDidReceiveDataOfLength:(uint64_t)length {}
