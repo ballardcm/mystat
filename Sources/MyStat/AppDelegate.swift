@@ -192,26 +192,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private func updateMenuBar() {
         let m = monitor.metrics
         let values = [m.cpu, m.memory.pressurePercent, m.gpu]
-        let labels = ["CPU", "MEM", "GPU"]
         let texts = values.map { monitor.paused ? "Ⅱ" : percent($0) }
-        let caption: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 7.5, weight: .bold), .foregroundColor: NSColor.black]
-        let number: [NSAttributedString.Key: Any] = [.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium), .foregroundColor: NSColor.black]
-        let widths = labels.indices.map { index in
-            ceil(max((labels[index] as NSString).size(withAttributes: caption).width,
-                     (texts[index] as NSString).size(withAttributes: number).width))
-        }
-        let gap: CGFloat = 8
-        let width = widths.reduce(0, +) + gap * CGFloat(labels.count - 1)
-        let image = NSImage(size: NSSize(width: width, height: 22), flipped: false) { _ in
-            var x: CGFloat = 0
-            for index in labels.indices {
-                (labels[index] as NSString).draw(at: NSPoint(x: x, y: 12), withAttributes: caption)
-                (texts[index] as NSString).draw(at: NSPoint(x: x, y: 0), withAttributes: number)
-                x += widths[index] + gap
-            }
-            return true
-        }
-        image.isTemplate = true; item.button?.image = image
+        item.button?.image = MenuBarMeter.image(texts: texts)
         item.button?.toolTip = "MyStat · CPU \(percent(m.cpu)) · Memory pressure \(percent(m.memory.pressurePercent)) (\(m.memory.pressure)), \(percent(m.memory.percent)) used · GPU \(percent(m.gpu))"
         item.button?.setAccessibilityValue(item.button?.toolTip)
     }
