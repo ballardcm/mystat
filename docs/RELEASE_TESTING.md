@@ -18,11 +18,15 @@ Host home, cloud folders, application sharing, shared clipboard, and automatic v
 
 ## Build and automated checks
 
+Configure the signing identity and notarization Keychain profile as described in [SIGNING.md](SIGNING.md). Official archives require the complete Apple verification path. For development/CI without credentials, use `./scripts/release.sh --adhoc` and check `dist/adhoc/SHA256SUMS`; this does not qualify a release.
+
 ```sh
 ./scripts/release.sh
 ./scripts/test-updates-integration.sh
 (cd dist && shasum -a 256 -c SHA256SUMS)
 codesign --verify --deep --strict build/MyStat.app
+xcrun stapler validate build/MyStat.app
+spctl --assess --type execute --verbose=2 build/MyStat.app
 ```
 
 The integration suite runs an ephemeral localhost server and replaces/relaunches only uniquely identified disposable fixture apps. It does not install a MyStat release, change the real MyStat defaults, or use the production signing key. Run it on the host and in the test VM when tooling is available.
@@ -52,7 +56,7 @@ Use a separate clone with the previous updater-enabled release installed. Set a 
 4. Install and relaunch. Verify the new dropdown version, exactly one running instance, preserved sampling settings, the original app path, and working launch at login after guest logout/login.
 5. Check again: no further update offered. Turn off automatic checks and reopen: preference remains off.
 6. Use a clone to test an unwritable or differently owned install; expect manual-update guidance before downloading, with no administrator prompt. Restore permissions and confirm checks work again.
-7. Test a quarantined candidate under normal macOS protections, as well as a standard user's writable `~/Applications` installation. Record Gatekeeper/ad-hoc-signature behavior explicitly.
+7. Test a quarantined candidate under normal macOS protections, as well as a standard user's writable `~/Applications` installation. For 0.2.0 onward, require Developer ID/Gatekeeper acceptance and a valid stapled notarization ticket without an Open Anyway override. Record the 0.1.3 ad-hoc → Developer ID transition and launch-at-login continuity explicitly.
 
 Version 0.1.1 has no updater: test its manual replacement with the first updater-enabled release separately.
 

@@ -23,7 +23,7 @@ The production private Ed25519 key is stored in the maintainer's macOS Keychain 
 ## Publishing a stable update
 
 1. Increment `CFBundleShortVersionString` and `CFBundleVersion` in a PR. Both must increase relative to the prior stable release. Review notes and run the tests in [RELEASE_TESTING.md](RELEASE_TESTING.md).
-2. Run `./scripts/release.sh`. The archive must be named `MyStat-<version>-macos-arm64.zip`. Current builds remain ad-hoc signed; Ed25519 authenticates updates but does not provide Apple Developer ID identity or notarization. Never remove quarantine or bypass Gatekeeper in the updater. If Developer ID signing/notarization is adopted, finish all signing and stapling before generating the archive and update signature.
+2. Follow [SIGNING.md](SIGNING.md) to configure Developer ID signing and notarization, then run `./scripts/release.sh`. The archive must be named `MyStat-<version>-macos-arm64.zip`. For 0.2.0 onward, official packaging requires Apple acceptance, stapling, and Gatekeeper verification before generating the final archive and update signature. Ad-hoc CI/local test archives use `--adhoc` and live in `dist/adhoc/`; do not publish them. Ed25519 authenticates updates separately from Apple's signature and notarization. Never remove quarantine or bypass Gatekeeper in the updater.
 3. Create a plain-text release notes file outside tracked source, then run:
 
    ```sh

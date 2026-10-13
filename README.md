@@ -57,13 +57,13 @@ The first release was built with Swift 6.3.3 and the macOS 26.5 SDK, and tested 
 
 Quit the running copy before opening a rebuilt app. Copy it to Applications before enabling launch at login, so its location remains stable.
 
-Package a release, including the license, install guide, and SHA-256 checksum:
+Package an ad-hoc test build, including the license, install guide, and SHA-256 checksum:
 
 ```sh
-./scripts/release.sh
+./scripts/release.sh --adhoc
 ```
 
-Artifacts are written to `dist/`, which is excluded from Git. The release script runs the hardware tests, builds the app, checks its signature, and packages only the intended deliverables.
+Ad-hoc test artifacts are written to `dist/adhoc/`, which is excluded from Git. The release script runs the hardware tests, builds the app, checks its signature, and packages only the intended deliverables. Official 0.2.0 release preparation uses [Developer ID signing and notarization](docs/SIGNING.md); running `./scripts/release.sh` without `--adhoc` requires the signing identity and notarization Keychain profile and produces an archive only after Apple acceptance and local verification.
 
 ## Measurements and compatibility
 

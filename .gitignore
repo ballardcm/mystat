@@ -27,6 +27,9 @@ xcuserdata/
 *.pem
 *.key
 *.p12
+*.p8
+*.csr
+*.certSigningRequest
 *.mobileprovision
 /.codex/
 /.agents/
