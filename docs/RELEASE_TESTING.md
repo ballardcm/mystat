@@ -16,6 +16,18 @@ Keep both clean OS baselines after successful upgrade tests, shut down between t
 
 Host home, cloud folders, application sharing, shared clipboard, and automatic volume sharing should be disabled for both baselines. Keep Apple Account sign-in out of these disposable guests. Record the exact guest OS build and verify all settings rather than assuming a clone or a new OS version preserves them.
 
+## Before signing: qualify the actual UI
+
+Do this **before the first Developer ID signature or Apple submission**, using an ad-hoc candidate in the disposable macOS 26 test VM. First build with `./scripts/release.sh --adhoc` and run `./scripts/test-updates-integration.sh`. Use the established per-app approval flow for this local test build; do not disable Gatekeeper globally. This development pass is separate from the later quarantined notarized-install check.
+
+- Inspect the actual menu-bar display with one-, two-, and three-digit readings, pause, and unavailable values. Confirm caption/value alignment and stable neighboring icons. Use the live meter fixture to force states unavailable on the VM, alongside the actual app.
+- Before inspecting each host or VM, match the installed executable's SHA-256 to the candidate, then relaunch and verify the running process path. Version/build labels alone are insufficient when multiple candidates share them. Record which candidate each VM is running.
+- Open the dropdown at a normal desktop size and a smaller VM display (for example, 800 × 600). Resize the VM while it is open, close/reopen, and confirm that the full header/footer remain visible below the menu bar and above the Dock. Scrolling must reach every section without clipped controls.
+- Check light/dark appearance, gear and right-click menus, pause/resume, sampling settings, Escape, close-button, and outside-click dismissal.
+- Record the exact source revision (and any uncommitted candidate diff), OS/display sizes, observed results, and defects. Fix defects and repeat affected checks before signing. Unit tests, static screenshots, and notarization acceptance are not substitutes for this visual pass.
+
+Only then continue with Developer ID signing, Apple submission, and the signed clean-install/upgrade checks below. Any later UI change returns to this pre-signing stage.
+
 ## Build and automated checks
 
 Configure the signing identity and notarization Keychain profile as described in [SIGNING.md](SIGNING.md). Official archives require the complete Apple verification path. For development/CI without credentials, use `./scripts/release.sh --adhoc` and check `dist/adhoc/SHA256SUMS`; this does not qualify a release.

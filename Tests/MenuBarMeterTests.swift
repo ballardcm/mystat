@@ -20,6 +20,13 @@ struct MenuBarMeterTests {
         // A left-aligned implementation has the same image size but fails this check.
         for scale in [1, 2] {
             let baseline = bitmap(reference, scale: scale)
+            for column in 0..<3 {
+                assertCentered(baseline, column: column, rows: 0..<10 * scale, scale: scale, label: "Caption")
+                for symbol in ["Ⅱ", "—"] {
+                    let rendered = bitmap(MenuBarMeter.image(texts: [symbol, symbol, symbol]), scale: scale)
+                    assertCentered(rendered, column: column, rows: 10 * scale..<22 * scale, scale: scale, label: symbol)
+                }
+            }
             for value in ["0%", "9%", "14%", "99%"] {
                 let rendered = bitmap(MenuBarMeter.image(texts: [value, value, value]), scale: scale)
                 for column in 0..<3 {
@@ -80,6 +87,21 @@ struct MenuBarMeterTests {
             try data.write(to: URL(fileURLWithPath: CommandLine.arguments[index + 1]))
         }
         print("PASS: 343 menu-bar state combinations keep \(reference.size.width) × \(reference.size.height) points; percent signs stay aligned at 1× and 2×")
+    }
+
+    @MainActor
+    static func assertCentered(_ bitmap: NSBitmapImageRep, column: Int, rows: Range<Int>, scale: Int, label: String) {
+        let cellWidth = (bitmap.pixelsWide / scale - 16) / 3
+        let left = (cellWidth + 8) * column * scale
+        let right = left + cellWidth * scale
+        let ink = (left..<right).filter { x in
+            rows.contains { y in (bitmap.colorAt(x: x, y: y)?.alphaComponent ?? 0) > 0.1 }
+        }
+        guard let first = ink.first, let last = ink.last else { fatalError("Missing \(label) pixels") }
+        let inkCenter = Double(first + last + 1) / 2
+        let cellCenter = Double(left + right) / 2
+        precondition(abs(inkCenter - cellCenter) <= 1.5 * Double(scale),
+                     "\(label) off center in column \(column), scale \(scale): \(inkCenter) vs \(cellCenter)")
     }
 
     @MainActor

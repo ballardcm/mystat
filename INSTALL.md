@@ -10,7 +10,9 @@ MyStat is built for and tested on **Apple Silicon running macOS 26**, with M5 Pr
 4. Click the display to see details. MEM is **memory pressure**; the dropdown also shows the percentage of physical memory used.
 5. Optional: use the dropdown's gear menu to enable **Launch at login** after placing the app in its permanent location.
 
-The release has an ad-hoc code signature. It is **not Developer ID signed or notarized**, so macOS may block it on first launch. If you have reviewed the project and trust this download, first try opening the app, then use **System Settings → Privacy & Security → Open Anyway** for MyStat. Follow [Apple's instructions](https://support.apple.com/en-us/102445). No system-wide security changes are needed. Building locally from source is another option.
+Official releases starting with **0.2.0 are Developer ID signed and notarized by Apple**, with the notarization ticket included in the app. Open the downloaded app normally; no Open Anyway override is required. macOS may ask you to confirm opening an app downloaded from the internet.
+
+Older 0.1.x releases and default local builds use ad-hoc signatures. For those builds only, if you trust the source, follow [Apple's per-app approval instructions](https://support.apple.com/en-us/102445). Never disable Gatekeeper globally. Building locally from source is another option.
 
 ## Verify the download
 

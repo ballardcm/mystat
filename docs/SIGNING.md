@@ -1,6 +1,6 @@
 # Developer ID signing and notarization
 
-MyStat 0.2.0 is being prepared as the first Developer ID signed and notarized release. Do not publish it until the real signing, notarization, Gatekeeper, macOS 26 VM, and upgrade checks have passed. Ad-hoc CI artifacts are test builds only.
+MyStat 0.2.0 introduces Developer ID signing and Apple notarization. Every official release must pass real signing, notarization, Gatekeeper, macOS 26 VM, and upgrade checks before publication. Ad-hoc CI artifacts are test builds only.
 
 ## One-time setup on the maintainer's Mac
 
@@ -17,7 +17,7 @@ MyStat 0.2.0 is being prepared as the first Developer ID signed and notarized re
 
 ## Build the official archive
 
-Build and qualify a candidate from the release branch before merging its PR. After merge, build the official artifact from the exact merged commit and verify that artifact before publishing. Use the certificate name or SHA-1 identity hash reported by `security find-identity`:
+First qualify an **ad-hoc candidate visually on macOS 26**, following the [before-signing checklist](RELEASE_TESTING.md#before-signing-qualify-the-actual-ui). Check the real app at normal and small display sizes and during resizing; record the source revision and fix any defects before invoking the signing command. Then sign and qualify that candidate from the release branch before merging its PR. After merge, build the official artifact from the exact merged commit and verify that artifact before publishing. Use the certificate name or SHA-1 identity hash reported by `security find-identity`:
 
 ```sh
 export MYSTAT_SIGN_IDENTITY='Developer ID Application: YOUR NAME (TEAMID)'

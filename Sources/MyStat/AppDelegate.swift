@@ -20,7 +20,7 @@ final class Monitor: ObservableObject {
     @Published var interval: Double = 2
     @Published var paused = false
     let hardware = HardwareInfo()
-    let panelHeight = min(790.0, max(560.0, (NSScreen.main?.visibleFrame.height ?? 900) - 65))
+    @Published var panelHeight: CGFloat = 790
     var onUpdate: (() -> Void)?
     private let queue = DispatchQueue(label: "io.github.ballardcm.MyStat.sampling", qos: .utility)
     private var timer: DispatchSourceTimer?
@@ -104,6 +104,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         observers.append(NotificationCenter.default.addObserver(forName: NSApplication.didResignActiveNotification, object: NSApp, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.closePanel() }
         })
+        observers.append(NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { [weak self] _ in
+            // Let AppKit update the status item's screen and anchor before measuring.
+            DispatchQueue.main.async {
+                if self?.panel.isVisible == true { self?.showPanel() }
+            }
+        })
         let center = NSWorkspace.shared.notificationCenter
         observers.append(center.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { if self?.monitor.paused == false { self?.monitor.togglePause(); self?.resumeAfterSleep = true } }
@@ -130,15 +136,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
     private func showPanel() {
         guard let button = item.button, let statusWindow = button.window else { return }
+        let anchor = statusWindow.convertToScreen(button.convert(button.bounds, to: nil))
+        guard let screen = statusWindow.screen ?? NSScreen.main else { return }
+        let frame = DashboardPlacement.frame(anchor: anchor, visibleFrame: screen.visibleFrame)
+        monitor.panelHeight = frame.height
         if panel.contentViewController == nil {
             panel.contentViewController = NSHostingController(rootView: Dashboard(monitor: monitor, updates: updates, close: { [weak self] in self?.closePanel() }).clipShape(RoundedRectangle(cornerRadius: 14)))
         }
-        let anchor = statusWindow.convertToScreen(button.convert(button.bounds, to: nil))
-        let screen = statusWindow.screen?.visibleFrame ?? NSScreen.main!.visibleFrame
-        let x = min(max(screen.minX + 8, anchor.midX - 212), screen.maxX - 432)
-        let y = max(screen.minY + 8, anchor.minY - monitor.panelHeight - 5)
         // Attaching a fresh hosting controller can reset the borderless panel's size.
-        panel.setFrame(NSRect(x: x, y: y, width: 424, height: monitor.panelHeight), display: true)
+        panel.setFrame(frame, display: true)
         panel.makeKeyAndOrderFront(nil)
         installDismissalMonitors()
         reviewEvent("opened key=\(panel.isKeyWindow)")

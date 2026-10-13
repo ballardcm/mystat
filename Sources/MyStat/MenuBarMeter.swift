@@ -25,9 +25,14 @@ enum MenuBarMeter {
         let image = NSImage(size: NSSize(width: width, height: 22), flipped: false) { _ in
             var x: CGFloat = 0
             for index in labels.indices {
-                (labels[index] as NSString).draw(at: NSPoint(x: x, y: 12), withAttributes: caption)
+                let label = labels[index] as NSString
+                let captionX = x + (widths[index] - label.size(withAttributes: caption).width) / 2
+                label.draw(at: NSPoint(x: captionX, y: 12), withAttributes: caption)
                 let text = texts[index] as NSString
-                let numberX = x + widths[index] - text.size(withAttributes: number).width
+                let remaining = widths[index] - text.size(withAttributes: number).width
+                // Numeric readings keep their percent signs aligned. Standalone state
+                // symbols belong under the caption, not against the column's right edge.
+                let numberX = x + (texts[index] == "Ⅱ" || texts[index] == "—" ? remaining / 2 : remaining)
                 text.draw(at: NSPoint(x: numberX, y: 0), withAttributes: number)
                 x += widths[index] + gap
             }
