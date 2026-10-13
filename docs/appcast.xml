@@ -6,21 +6,21 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <link>https://github.com/ballardcm/mystat/releases</link>
     <description>Stable releases for Apple Silicon on macOS 26 and 27.</description>
     <item>
-      <title>MyStat 0.2.0</title>
-      <sparkle:version>5</sparkle:version>
-      <sparkle:shortVersionString>0.2.0</sparkle:shortVersionString>
+      <title>MyStat 0.2.1</title>
+      <sparkle:version>6</sparkle:version>
+      <sparkle:shortVersionString>0.2.1</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
       <sparkle:maximumSystemVersion>27.99</sparkle:maximumSystemVersion>
-      <description sparkle:format="plain-text">MyStat 0.2.0 keeps the menu-bar meter a fixed width across single-, double-, and triple-digit readings, paused monitoring, and unavailable sensors. Numeric values are right-aligned so the percent signs and neighboring menu-bar icons stay put. Labels and pause/unavailable symbols are centered within their columns. The dashboard now adapts its height and position when the display changes.
+      <description sparkle:format="plain-text">MyStat 0.2.1 makes the menu-bar meter more compact and centers each reading beneath its CPU, MEM, or GPU caption. Single- and two-digit readings remain easy to read, while 100% fits the same fixed footprint. Digit changes, pause, and unavailable readings keep the meter and neighboring menu-bar icons in place.
 
-This release is signed with Apple Developer ID, notarized by Apple, and includes a stapled notarization ticket. Sparkle continues to verify the existing Ed25519 signatures on updates. Automatic update checks remain off by default; there is no telemetry or privileged helper.
+This release changes no sensor mappings. macOS 26 remains the built-and-tested target; macOS 27 sensor support remains experimental.
 
-Built and tested for Apple Silicon on macOS 26. macOS 27 sensor mappings remain experimental. Prepared with substantial OpenAI Codex assistance.
+Developed with substantial OpenAI Codex assistance.
 </description>
-      <enclosure url="https://github.com/ballardcm/mystat/releases/download/v0.2.0/MyStat-0.2.0-macos-arm64.zip" length="1627670" type="application/octet-stream" sparkle:edSignature="pQO0oNpYtBCiLDi1WIF7DdJ+wziEyDlA4GApwpm2lAp0J27wakTXdgtYhCcv+8hDQBAJIPuOv5xmEaySnERrDg==" sparkle:installationType="application" sparkle:os="macos"></enclosure>
+      <enclosure url="https://github.com/ballardcm/mystat/releases/download/v0.2.1/MyStat-0.2.1-macos-arm64.zip" length="1627465" type="application/octet-stream" sparkle:edSignature="569Zrmf/vpo4auZWsk7xFm9LAxe2ppdrd+GR7VLo71I7sVUV5DLGdAnxonXVKDJMZazP5a4NUvO8AL7flap5CQ==" sparkle:installationType="application" sparkle:os="macos"></enclosure>
     </item>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: vd06K3h6O7KFftnSwhINyqILEgSyl5HBJEY9DA1YBQzI5qVVVPxN6XXvz6xdxSqVk9oEEEc70EzAF7QttB56CQ==
-length: 2130
+edSignature: b5JPiNuYc/Y6JaaZFyvQnOP3NaYmFCGpzqo8qX7a2RVDvPxw6SWRyOVkx6VrhqS+UFVadbOCc4YsFt1cCcEeAQ==
+length: 1816
 -->
