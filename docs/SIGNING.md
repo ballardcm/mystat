@@ -1,6 +1,6 @@
 # Developer ID signing and notarization
 
-MyStat 0.2.0 introduces Developer ID signing and Apple notarization. Every official release must pass real signing, notarization, Gatekeeper, macOS 26 VM, and upgrade checks before publication. Ad-hoc CI artifacts are test builds only.
+MyStat 0.2.0 introduces Developer ID signing and Apple notarization. Every official release must pass real signing, notarization, Gatekeeper, macOS 26 VM, and upgrade checks before publication. Ad-hoc CI artifacts are test builds only. Starting with the release after 0.2.1, macOS 27 is the primary target; macOS 26 remains supported until macOS 28 is released. Apply the pre-signing visual pass and signed clean-install/upgrade qualification to both supported versions.
 
 ## One-time setup on the maintainer's Mac
 
