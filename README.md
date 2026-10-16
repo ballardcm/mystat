@@ -8,6 +8,8 @@ A native app with no accounts, subscriptions, analytics, or privileged helper. S
 
 **Built and tested for macOS 26 on Apple Silicon.** Tested on an M5 Pro MacBook Pro and reported working on an M5 MacBook Air. macOS 27 hardware checks remain experimental. See [tested configurations and results](docs/testing/2026-10-12-hardware.md).
 
+**Next-release support policy:** Starting with the release after 0.2.1, macOS 27 will be the primary target. macOS 26 support will remain until macOS 28 is released. Releases will be qualified on both supported versions; existing hardware-validation limits still apply.
+
 [Download the latest release](https://github.com/ballardcm/mystat/releases/latest) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/ballardcm/mystat/issues)
 
 ## A closer look

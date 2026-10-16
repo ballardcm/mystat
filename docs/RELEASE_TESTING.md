@@ -1,6 +1,6 @@
 # Release testing
 
-Each release needs automated tests, a clean macOS 26 VM pass, an upgrade pass, and a host hardware check. A successful compile or unit test alone is not release qualification.
+Starting with the release after 0.2.1, macOS 27 is the primary target and macOS 26 remains supported until macOS 28 is released. Each release needs automated tests, clean-install and upgrade passes on both supported OS versions, and a physical hardware check. A successful compile or unit test alone is not release qualification.
 
 ## Local Parallels lab
 
@@ -10,7 +10,7 @@ Finish Setup Assistant with a dedicated local test account, install Parallels To
 
 For the owner's dedicated disposable lab, configure automatic login and no password requirement after sleep or the screen saver. Keep these settings confined to the test guests. Use Parallels guest execution after installing Tools so routine test commands do not require interactive authentication. Verify a full guest restart reaches the desktop and a guest command runs unattended before marking a baseline ready. Initial account creation and any authentication needed to enable these settings must be completed before preserving the baseline; do not store passwords in the repository, scripts, command arguments, or logs.
 
-Maintain a separate macOS 27 experimental baseline with the same unattended configuration. Verify the restore image is supported by the host before installation. A working VM does not establish MyStat compatibility: record macOS 27 results separately, and retain macOS 26 as the release qualification target. Starting with 0.1.3, in-app updates accept macOS 27. Test its update flow separately; physical sensor mappings there remain experimental. Older builds already on 27 require a manual installation of 0.1.3 before they can check for updates.
+Maintain a separate macOS 27 primary-target baseline with the same unattended configuration. Verify the restore image is supported by the host before installation. A working VM does not establish MyStat compatibility: record results for each OS separately, and retain macOS 26 regression qualification until macOS 28 is released. Starting with 0.1.3, in-app updates accept macOS 27. Test its update flow separately; physical sensor mappings there remain experimental. Older builds already on 27 require a manual installation of 0.1.3 before they can check for updates.
 
 Keep both clean OS baselines after successful upgrade tests, shut down between test sessions. The macOS 26 VM preserves release coverage when the physical host runs macOS 27; the macOS 27 VM remains useful for repeatable clean-install, upgrade, settings-persistence, and failure-recovery checks. Reuse or recreate working clones for future releases, leaving the baselines intact. Continue using physical hardware for sensor checks.
 
@@ -18,7 +18,7 @@ Host home, cloud folders, application sharing, shared clipboard, and automatic v
 
 ## Before signing: qualify the actual UI
 
-Do this **before the first Developer ID signature or Apple submission**, using an ad-hoc candidate in the disposable macOS 26 test VM. First build with `./scripts/release.sh --adhoc` and run `./scripts/test-updates-integration.sh`. Use the established per-app approval flow for this local test build; do not disable Gatekeeper globally. This development pass is separate from the later quarantined notarized-install check.
+Do this **before the first Developer ID signature or Apple submission**, using an ad-hoc candidate on macOS 27 and in the disposable macOS 26 test VM while macOS 26 remains supported. First build with `./scripts/release.sh --adhoc` and run `./scripts/test-updates-integration.sh`. Use the established per-app approval flow for this local test build; do not disable Gatekeeper globally. This development pass is separate from the later quarantined notarized-install check.
 
 - Inspect the actual menu-bar display with one-, two-, and three-digit readings, pause, and unavailable values. Confirm caption/value alignment and stable neighboring icons. Use the live meter fixture to force states unavailable on the VM, alongside the actual app.
 - Before inspecting each host or VM, match the installed executable's SHA-256 to the candidate, then relaunch and verify the running process path. Version/build labels alone are insufficient when multiple candidates share them. Record which candidate each VM is running.
