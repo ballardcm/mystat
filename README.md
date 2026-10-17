@@ -6,7 +6,7 @@ MyStat is a small native Swift/SwiftUI monitor with AppKit/Core Graphics charts 
 
 A native app with no accounts, subscriptions, analytics, or privileged helper. Sparkle is bundled for optional signed updates; automatic checks are off by default. Free to use, change, and share under the [MIT license](LICENSE).
 
-**Built and tested for macOS 26 on Apple Silicon.** Tested on an M5 Pro MacBook Pro and reported working on an M5 MacBook Air. macOS 27 hardware checks remain experimental. See [tested configurations and results](docs/testing/2026-10-12-hardware.md).
+**Built for Apple Silicon, with macOS 27 as the primary target for the next release and macOS 26 support retained.** The unreleased candidate passed actual-app visual checks on macOS 27.0.1 and 26.6, plus a one-hour memory soak on an M5 Pro MacBook Pro running macOS 27.0.1. See [current testing and results](docs/testing/2026-10-17-core-graphics-charts.md). macOS 27 power-sensor mappings remain experimental; these checks do not establish independent sensor accuracy. Earlier hardware reports, including an M5 MacBook Air, are recorded [separately](docs/testing/2026-10-12-hardware.md).
 
 **Next-release support policy:** Starting with the release after 0.2.1, macOS 27 will be the primary target. macOS 26 support will remain until macOS 28 is released. Releases will be qualified on both supported versions; existing hardware-validation limits still apply.
 
