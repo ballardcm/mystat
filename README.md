@@ -57,7 +57,7 @@ cd mystat
 open build/MyStat.app
 ```
 
-The first release was built with Swift 6.3.3 and the macOS 26.5 SDK, and tested on macOS 26.6. The build uses the active developer directory's default SDK, ignoring an inherited `SDKROOT`. If needed, set `MYSTAT_SDK` to a compatible SDK directory. It produces an arm64 app with an ad-hoc signature in `build/MyStat.app`.
+The 0.2.2 release uses Xcode 27.1 and the macOS 27.0 SDK, with qualification on macOS 27.0.1 and macOS 26.6. The build uses the active developer directory's default SDK, ignoring an inherited `SDKROOT`. If needed, set `MYSTAT_SDK` to a compatible SDK directory. It produces an arm64 app with an ad-hoc signature in `build/MyStat.app`.
 
 Quit the running copy before opening a rebuilt app. Copy it to Applications before enabling launch at login, so its location remains stable.
 
