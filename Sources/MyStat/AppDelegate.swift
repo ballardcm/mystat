@@ -73,6 +73,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let monitor = Monitor()
     let updates = UpdateController()
     private var item: NSStatusItem!
+    private let meterCache = MenuBarMeter.Cache()
     private var panel: DashboardPanel!
     private var observers: [NSObjectProtocol] = []
     private var localEvents: Any?
@@ -199,7 +200,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         let m = monitor.metrics
         let values = [m.cpu, m.memory.pressurePercent, m.gpu]
         let texts = values.map { monitor.paused ? "Ⅱ" : percent($0) }
-        item.button?.image = MenuBarMeter.image(texts: texts)
+        let image = meterCache.image(texts: texts)
+        if item.button?.image !== image { item.button?.image = image }
         item.button?.toolTip = "MyStat · CPU \(percent(m.cpu)) · Memory pressure \(percent(m.memory.pressurePercent)) (\(m.memory.pressure)), \(percent(m.memory.percent)) used · GPU \(percent(m.gpu))"
         item.button?.setAccessibilityValue(item.button?.toolTip)
     }

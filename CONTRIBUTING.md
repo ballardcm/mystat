@@ -11,7 +11,7 @@ Pull requests are welcome, including small fixes and first contributions. Help k
 
 **Every change goes through a PR, including maintainer changes.** Do not push application changes directly to `main`. The initial empty bootstrap commit exists only to give the first implementation PR a base.
 
-macOS 26 on Apple Silicon remains the release qualification target. A hardware smoke check passed on an M5 Pro running macOS 27.0.1, and successful operation was reported on an M5 MacBook Air running macOS 26; see the [evidence and limits](docs/testing/2026-10-12-hardware.md). macOS 27 sensor mappings remain experimental. Reports and PRs for new hardware are welcome, with actual measurements and clearly stated limitations.
+Starting with the release after 0.2.1, macOS 27 on Apple Silicon is the primary target; qualify releases on both macOS 27 and macOS 26, retaining macOS 26 support until macOS 28 is released. A hardware smoke check passed on an M5 Pro running macOS 27.0.1, and successful operation was reported on an M5 MacBook Air running macOS 26; see the [evidence and limits](docs/testing/2026-10-12-hardware.md). macOS 27 sensor mappings remain experimental. Reports and PRs for new hardware are welcome, with actual measurements and clearly stated limitations.
 
 Favor system frameworks and small, bounded background work. Sparkle is the approved bundled dependency for signed updates, with networking only for manual checks or explicitly opted-in scheduled checks and user-approved downloads. Do not add other runtime dependencies, network traffic, telemetry, subprocess polling, or privileged helpers. Automatic checks must remain off by default. Missing sensor data must stay unavailable rather than becoming a plausible-looking zero.
 

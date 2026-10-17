@@ -26,6 +26,34 @@ struct Metrics: Codable {
     var thermalState = "Nominal"
     var powerSource = "Waiting for counters"
 }
+// Keep only the readings used by the app, not the battery registry's object graph.
+struct BatteryReadings {
+    let onAC: Bool
+    let charging: Bool
+    let percent: Double?
+    let power: Double?
+    let systemPower: Double?
+
+    init(properties: [String: Any]) {
+        onAC = (properties["ExternalConnected"] as? Bool) ?? false
+        charging = (properties["IsCharging"] as? Bool) ?? false
+        percent = (properties["CurrentCapacity"] as? NSNumber)?.doubleValue
+        if let voltage = properties["Voltage"] as? NSNumber,
+           let amperage = properties["InstantAmperage"] as? NSNumber {
+            // The registry may encode a negative signed current as a UInt64.
+            let signed = Int64(bitPattern: amperage.uint64Value)
+            power = finite(abs(Double(signed) * voltage.doubleValue / 1e6), in: 0...500)
+        } else {
+            power = nil
+        }
+        if let telemetry = properties["PowerTelemetryData"] as? [String: Any],
+           let milliwatts = telemetry["SystemLoad"] as? NSNumber {
+            systemPower = finite(milliwatts.doubleValue / 1000, in: 0.01...500)
+        } else {
+            systemPower = nil
+        }
+    }
+}
 struct HardwareInfo {
     let chip: String
     let coreDescription: String
@@ -82,11 +110,12 @@ func finite(_ value: Double, in range: ClosedRange<Double> = 0...1000) -> Double
 // All mutable hardware state belongs to the serial sampling queue.
 final class MetricsReader {
     private var previousTicks: [UInt32] = []
+    private let host = mach_host_self()
     private let smc = msc_open()
     private let power = msp_open(Int32(ProcessInfo.processInfo.operatingSystemVersion.majorVersion))
     private var cpuKeys: [String] = [], gpuKeys: [String] = []
     private var zeroCPUSamples = 0
-    private var battery: [String: Any]?
+    private var battery: BatteryReadings?
     private var lastBatteryRead = -Double.infinity
     private(set) var discoveredSensors: [String] = []
     init() {
@@ -102,12 +131,19 @@ final class MetricsReader {
             }
         }
     }
-    deinit { msc_close(smc); msp_close(power) }
+    deinit {
+        msc_close(smc); msp_close(power)
+        if host != MACH_PORT_NULL { mach_port_deallocate(mach_task_self_, host) }
+    }
     func smcValue(_ key: String) -> Double? {
         var value = 0.0
         return key.withCString { msc_read(smc, $0, &value) } ? value : nil
     }
     func sample() -> Metrics {
+        // Drain temporary bridged objects after every sample, on every entry path.
+        autoreleasepool { readSample() }
+    }
+    private func readSample() -> Metrics {
         let started = ProcessInfo.processInfo.systemUptime
         let cpuStarted = processCPUSeconds()
         var m = Metrics()
@@ -137,19 +173,14 @@ final class MetricsReader {
         m.systemPower = smcValue("PSTR").flatMap { finite($0, in: 0.01...500) }
         if m.systemPower != nil { m.powerSource += " · SMC system sensor" }
         if started - lastBatteryRead >= 10 {
-            battery = registryProperties("AppleSmartBattery"); lastBatteryRead = started
+            battery = registryProperties("AppleSmartBattery").map { BatteryReadings(properties: $0) }
+            lastBatteryRead = started
         }
         if let b = battery {
-            m.onAC = (b["ExternalConnected"] as? Bool) ?? false
-            m.charging = (b["IsCharging"] as? Bool) ?? false
-            m.batteryPercent = (b["CurrentCapacity"] as? NSNumber)?.doubleValue
-            if let v = b["Voltage"] as? NSNumber, let a = b["InstantAmperage"] as? NSNumber {
-                // The registry may encode a negative signed current as a UInt64.
-                let signed = Int64(bitPattern: a.uint64Value)
-                m.batteryPower = finite(abs(Double(signed) * v.doubleValue / 1e6), in: 0...500)
-            }
-            if m.systemPower == nil, let telemetry = b["PowerTelemetryData"] as? [String: Any], let mw = telemetry["SystemLoad"] as? NSNumber {
-                m.systemPower = finite(mw.doubleValue / 1000, in: 0.01...500)
+            m.onAC = b.onAC; m.charging = b.charging
+            m.batteryPercent = b.percent; m.batteryPower = b.power
+            if m.systemPower == nil, let systemPower = b.systemPower {
+                m.systemPower = systemPower
                 m.powerSource += " · battery-controller system load"
             }
         }
@@ -167,7 +198,7 @@ final class MetricsReader {
     private func readCPU() -> [CoreLoad] {
         var info: processor_info_array_t?
         var count: mach_msg_type_number_t = 0, processors: natural_t = 0
-        guard host_processor_info(mach_host_self(), PROCESSOR_CPU_LOAD_INFO, &processors, &info, &count) == KERN_SUCCESS, let info else { return [] }
+        guard host_processor_info(host, PROCESSOR_CPU_LOAD_INFO, &processors, &info, &count) == KERN_SUCCESS, let info else { return [] }
         defer { vm_deallocate(mach_task_self_, vm_address_t(UInt(bitPattern: info)), vm_size_t(count) * vm_size_t(MemoryLayout<integer_t>.size)) }
         let ticks = (0..<Int(count)).map { UInt32(bitPattern: info[$0]) }
         defer { previousTicks = ticks }
@@ -194,7 +225,7 @@ final class MetricsReader {
         var vm = vm_statistics64()
         var count = mach_msg_type_number_t(MemoryLayout<vm_statistics64>.size / MemoryLayout<integer_t>.size)
         let result = withUnsafeMutablePointer(to: &vm) {
-            $0.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { host_statistics64(mach_host_self(), HOST_VM_INFO64, $0, &count) }
+            $0.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { host_statistics64(host, HOST_VM_INFO64, $0, &count) }
         }
         guard result == KERN_SUCCESS else { m.total = 0; return m }
         let page = Double(vm_kernel_page_size)
