@@ -91,9 +91,8 @@ In approximately 20-minute menu-bar-only runs, MyStat 0.2.2 used **41% less medi
 | --- | ---: | ---: | ---: | ---: |
 | MacBook Pro, macOS 27.0.1 | 27.9 MiB | 46.9 MiB | 0.55% | 0.54% |
 | macOS 27.0.1 VM | 11.8 MiB | 43.5 MiB | 0.18% | 0.27% |
-| macOS 26.6 VM | 10.2 MiB | 40.5 MiB | 0.07% | 0.18% |
 
-Memory is median physical footprint; CPU is the average percentage of **one core**. Totals include observed background processes. Settings and dropdowns were closed. The macOS 27 VM also used matched two-second refresh; the macOS 26 VM used **five seconds for MyStat versus two seconds for the paid software**, so its CPU figures are not a matched-rate comparison. VM GPU readings do not validate physical sensors. These are short observations under the stated workload, not universal performance or battery-life claims. See the [comparison methodology, peaks, and limitations](docs/testing/2026-10-17-monitoring-comparison.md).
+Memory is median physical footprint; CPU is the average percentage of **one core**. Totals include observed background processes. Settings and dropdowns were closed. Both environments used matched nominal two-second refresh. VM GPU readings do not validate physical sensors. These are short observations under the stated workload, not universal performance or battery-life claims. See the [comparison methodology, peaks, and limitations](docs/testing/2026-10-17-monitoring-comparison.md).
 
 ## Measurements and compatibility
 
