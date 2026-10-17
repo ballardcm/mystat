@@ -4,6 +4,24 @@ import AppKit
 struct MenuBarMeterTests {
     @MainActor
     static func main() throws {
+        let cache = MenuBarMeter.Cache()
+        weak var replacedImage: NSImage?
+        autoreleasepool {
+            let first = cache.image(texts: ["9%", "10%", "—"])
+            replacedImage = first
+            precondition(cache.image(texts: ["9%", "10%", "—"]) === first,
+                         "Unchanged meter text must reuse its image")
+            let changed = cache.image(texts: ["10%", "10%", "—"])
+            precondition(changed !== first, "Changed text must redraw")
+            precondition(cache.image(texts: ["9%", "10%", "—"]) !== first,
+                         "The cache must retain only the current combination")
+        }
+        precondition(replacedImage == nil, "The cache retained an obsolete image")
+        for texts in [["Ⅱ", "Ⅱ", "Ⅱ"], ["—", "—", "—"], ["100%", "0%", "9%"]] {
+            let image = cache.image(texts: texts)
+            precondition(cache.image(texts: texts) === image)
+            precondition(image.size == NSSize(width: 89, height: 22) && image.isTemplate)
+        }
         let states = ["0%", "9%", "10%", "99%", "100%", "Ⅱ", "—"]
         let reference = MenuBarMeter.image(texts: ["100%", "100%", "100%"])
         precondition(reference.size == NSSize(width: 89, height: 22), "Compact meter geometry changed")
@@ -72,7 +90,7 @@ struct MenuBarMeterTests {
                 }
             }
             for texts in readings {
-                item.button?.image = MenuBarMeter.image(texts: texts)
+                item.button?.image = cache.image(texts: texts)
                 RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.15))
                 guard let button = item.button, let window = button.window,
                       let neighborWindow = neighbor.button?.window else {

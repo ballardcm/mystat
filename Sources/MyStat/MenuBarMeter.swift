@@ -2,6 +2,20 @@ import AppKit
 
 @MainActor
 enum MenuBarMeter {
+    @MainActor
+    final class Cache {
+        private var texts: [String]?
+        private var currentImage: NSImage?
+
+        func image(texts: [String]) -> NSImage {
+            if self.texts == texts, let currentImage { return currentImage }
+            let image = MenuBarMeter.image(texts: texts)
+            self.texts = texts
+            currentImage = image
+            return image
+        }
+    }
+
     private static let labels = ["CPU", "MEM", "GPU"]
     private static let caption: [NSAttributedString.Key: Any] = [
         .font: NSFont.systemFont(ofSize: 7.5, weight: .bold), .foregroundColor: NSColor.black

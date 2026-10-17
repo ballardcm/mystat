@@ -5,6 +5,11 @@ source scripts/toolchain.sh
 mkdir -p build
 xcrun clang -Wall -Wextra -Werror -isysroot "$SDK" -I Sources/Hardware Tests/HardwareTests.c Sources/Hardware/Hardware.c Sources/Hardware/CLPC.c -framework IOKit -framework CoreFoundation -o build/hardware-tests
 build/hardware-tests
+xcrun clang -arch arm64 -mmacosx-version-min=14.0 -O2 -Wall -Wextra -Werror -isysroot "$SDK" -I Sources/Hardware -c Sources/Hardware/Hardware.c -o build/test-Hardware.o
+xcrun clang -arch arm64 -mmacosx-version-min=14.0 -O2 -Wall -Wextra -Werror -isysroot "$SDK" -I Sources/Hardware -c Sources/Hardware/CLPC.c -o build/test-CLPC.o
+mkdir -p build/module-cache
+xcrun swiftc -O -swift-version 5 -sdk "$SDK" -target arm64-apple-macosx14.0 -module-cache-path build/module-cache -import-objc-header Sources/Hardware/Hardware.h Sources/MyStat/Metrics.swift Tests/MetricsTests.swift build/test-Hardware.o build/test-CLPC.o -framework IOKit -framework CoreFoundation -o build/metrics-tests
+build/metrics-tests
 source scripts/sparkle.sh
 mkdir -p build/module-cache
 xcrun swiftc -swift-version 5 -sdk "$SDK" -target arm64-apple-macosx14.0 -module-cache-path build/module-cache -F "$SPARKLE_DIR" -framework Sparkle -Xlinker -rpath -Xlinker "$SPARKLE_DIR" Sources/MyStat/UpdatePolicy.swift Tests/UpdateTests.swift -o build/update-tests
@@ -13,5 +18,7 @@ xcrun swiftc -swift-version 5 -sdk "$SDK" -target arm64-apple-macosx14.0 -module
 build/menu-bar-tests
 xcrun swiftc -swift-version 5 -sdk "$SDK" -target arm64-apple-macosx14.0 -module-cache-path build/module-cache Sources/MyStat/DashboardPlacement.swift Tests/DashboardPlacementTests.swift -framework AppKit -o build/dashboard-placement-tests
 build/dashboard-placement-tests
+xcrun swiftc -swift-version 5 -sdk "$SDK" -target arm64-apple-macosx14.0 -module-cache-path build/module-cache Sources/MyStat/Sparkline.swift Tests/SparklineTests.swift -framework AppKit -framework SwiftUI -o build/sparkline-tests
+build/sparkline-tests
 PYTHONDONTWRITEBYTECODE=1 python3 Tests/AppcastTests.py
 PYTHONDONTWRITEBYTECODE=1 python3 Tests/ReleaseTests.py

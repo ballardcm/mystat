@@ -2,7 +2,7 @@
 
 **Fast, free, lightweight Mac stats. Right in your menu bar.**
 
-MyStat is a small native Swift/SwiftUI monitor for Apple Silicon. CPU activity, memory pressure, and GPU activity stay visible at a glance. Click for the details, then get back to what you were doing.
+MyStat is a small native Swift/SwiftUI monitor with AppKit/Core Graphics charts for Apple Silicon. CPU activity, memory pressure, and GPU activity stay visible at a glance. Click for the details, then get back to what you were doing.
 
 A native app with no accounts, subscriptions, analytics, or privileged helper. Sparkle is bundled for optional signed updates; automatic checks are off by default. Free to use, change, and share under the [MIT license](LICENSE).
 
@@ -44,11 +44,11 @@ Starting with **0.2.0, official releases are Developer ID signed and notarized b
 
 ## Build from source
 
-Use an Apple Silicon Mac with macOS 26 and a compatible Apple Swift/Clang toolchain. Xcode Command Line Tools and Python 3 are enough; full Xcode, Homebrew, and GCC are unnecessary. The first build downloads a pinned, checksum-verified Sparkle framework from its official GitHub release; later builds reuse that archive. No dependency installation is required for users.
+Use an Apple Silicon Mac with macOS 26 or 27, a compatible Apple Swift/Clang toolchain, and Python 3. The current candidate was built with full Xcode 27.1 and the macOS 27.0 SDK. Select Xcode as the active developer directory; the standalone Command Line Tools installation tested on macOS 27 lacked the required SwiftUI macro plugin. Homebrew and GCC are unnecessary. The first build downloads a pinned, checksum-verified Sparkle framework from its official GitHub release; later builds reuse that archive. No dependency installation is required for users.
 
 ```sh
-# Only if Command Line Tools are not already installed:
-xcode-select --install
+# After installing Xcode and completing its first-launch setup:
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
 
 git clone https://github.com/ballardcm/mystat.git
 cd mystat
@@ -68,6 +68,20 @@ Package an ad-hoc test build, including the license, install guide, and SHA-256 
 ```
 
 Ad-hoc test artifacts are written to `dist/adhoc/`, which is excluded from Git. The release script runs the hardware tests, builds the app, checks its signature, and packages only the intended deliverables. Official releases use [Developer ID signing and notarization](docs/SIGNING.md); running `./scripts/release.sh` without `--adhoc` requires the signing identity and notarization Keychain profile and produces an archive only after Apple acceptance and local verification.
+
+## Memory footprint and testing (unreleased)
+
+The next-release candidate replaces the three SwiftUI Canvas charts with AppKit/Core Graphics drawing, preserving the dashboard, readings, 60-sample histories, and sampling options. On an M5 Pro with 48 GB running macOS 27.0.1, matched open-dashboard runs at the default two-second refresh measured:
+
+| Physical memory footprint | Canvas control | New candidate |
+| --- | ---: | ---: |
+| Median over 61 samples | 127.3 MiB | 29.6 MiB |
+
+That is about **77% less memory with the dashboard open** on this configuration. A separate one-hour visible-dashboard soak at the faster one-second refresh recorded a 32.3 MiB median and 33.3 MiB lifetime peak, with no upward trend. Short comparison runs showed no CPU regression. These are measured results on one Mac, not a memory or performance guarantee for every workload.
+
+We also fixed a resource leak: CPU and memory sampling acquired two Mach host send-right references per sample without releasing them. The sampler now owns one reusable reference and releases it when destroyed. This kernel-resource leak was separate from the large chart allocations. Battery caching now retains only scalar readings, temporary sampling objects drain after each sample, and unchanged menu-bar values reuse one cached image.
+
+The ad-hoc candidate passed the automated suite and updater integration tests, actual-app visual checks on macOS 26.6 and 27.0.1 (light/dark, normal/small displays, resizing while open, settings, pause and dismissal), and 100 open/close cycles on macOS 27 with no material retained-memory growth. Physical sensor availability was smoke-tested; macOS 27 sensor mappings remain experimental. See the [exact candidate, methodology, results, and limitations](docs/testing/2026-10-17-core-graphics-charts.md). These changes are awaiting review and release approval; they are not in the published 0.2.1 release.
 
 ## Measurements and compatibility
 
@@ -109,7 +123,7 @@ Published 0.1.1 installations need one manual upgrade to 0.1.2 or later to obtai
 
 ## Development notes
 
-`Sources/MyStat` contains the UI and sampler. `Sources/Hardware` contains the small read-only C interfaces. `Tests` checks counter mappings and energy conversion edge cases.
+`Sources/MyStat` contains the UI and sampler. `Sources/Hardware` contains the small read-only C interfaces. `Tests` checks counter mappings, energy conversion, sampler resource ownership, battery decoding, menu-bar rendering and caching, chart geometry and drawing, dashboard placement, and updater/release behavior.
 
 ```sh
 build/MyStat.app/Contents/MacOS/MyStat --diagnose

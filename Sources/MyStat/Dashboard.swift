@@ -163,7 +163,7 @@ struct Dashboard: View {
             Text("About these readings").font(.system(size: 12, weight: .semibold))
             Text("CPU is busy time across all cores. Menu-bar MEM and the pressure chart show memory pressure; lower means more headroom. Memory used is shown separately and includes app, wired and compressed memory. GPU is driver-reported device utilization. Charts show the last 60 samples.")
             Text("Temperatures show the hottest readable die sensor. Power is estimated; component watts need not add up to the entire Mac. A dash means that macOS did not provide a usable reading.")
-            Text("Sensor and power interfaces are private Apple APIs and can change with macOS updates. Built for and tested on macOS 26. macOS 27 support is planned for a later update. Unknown counters are shown as unavailable.")
+            Text("Sensor and power interfaces are private Apple APIs and can change with macOS updates. macOS 27 is the primary target, with macOS 26 support retained. Sensor compatibility depends on hardware; macOS 27 power mappings remain experimental. Unknown counters are shown as unavailable.")
             Text("\(ProcessInfo.processInfo.operatingSystemVersionString) · refresh \(Int(monitor.interval))s")
             Text(m.powerSource)
             Text("Cache: \(gigabytes(m.memory.cached)) · Battery: \(percent(m.batteryPercent)) · \(m.charging ? "Charging" : m.onAC ? "AC connected" : "Discharging") \(watts(m.batteryPower)) W")
@@ -239,29 +239,11 @@ private struct MetricCard: View {
         VStack(alignment: .leading, spacing: 7) {
             Text(title).font(.system(size: 9, weight: .semibold)).tracking(1).foregroundStyle(color)
             Text(value).font(.system(size: 27, weight: .light, design: .rounded)).monospacedDigit()
-            Sparkline(values: history, color: color).frame(height: 20)
+            Sparkline(values: history, color: color).frame(height: 20).accessibilityHidden(true)
         }.padding(12).frame(maxWidth: .infinity, alignment: .leading)
         .background(color.opacity(0.065), in: RoundedRectangle(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(color.opacity(0.13), lineWidth: 0.5))
         .accessibilityElement(children: .ignore).accessibilityLabel(title).accessibilityValue(value)
-    }
-}
-private struct Sparkline: View {
-    let values: [Double]
-    let color: Color
-    var body: some View {
-        Canvas { context, size in
-            var baseline = Path(); baseline.move(to: CGPoint(x: 0, y: size.height - 1)); baseline.addLine(to: CGPoint(x: size.width, y: size.height - 1))
-            context.stroke(baseline, with: .color(color.opacity(0.15)), lineWidth: 1)
-            guard values.count > 1 else { return }
-            var line = Path()
-            let points = values.enumerated().map { i, value in CGPoint(x: size.width * CGFloat(60 - values.count + i) / 59, y: 1 + (size.height - 3) * (1 - value / 100)) }
-            line.addLines(points)
-            var fill = line
-            fill.addLine(to: CGPoint(x: points.last!.x, y: size.height)); fill.addLine(to: CGPoint(x: points.first!.x, y: size.height)); fill.closeSubpath()
-            context.fill(fill, with: .linearGradient(Gradient(colors: [color.opacity(0.18), color.opacity(0.01)]), startPoint: .zero, endPoint: CGPoint(x: 0, y: size.height)))
-            context.stroke(line, with: .color(color), style: StrokeStyle(lineWidth: 1.3, lineCap: .round, lineJoin: .round))
-        }.accessibilityHidden(true)
     }
 }
 private extension View {
