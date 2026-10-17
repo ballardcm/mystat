@@ -12,6 +12,8 @@ A native app with no accounts, subscriptions, analytics, or privileged helper. S
 
 [Download the latest release](https://github.com/ballardcm/mystat/releases/latest) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/ballardcm/mystat/issues)
 
+For suspected security vulnerabilities, follow the [private reporting instructions](SECURITY.md).
+
 ## A closer look
 
 Actual menu bar capture on macOS 26:
