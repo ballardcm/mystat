@@ -6,9 +6,9 @@ MyStat is a small native Swift/SwiftUI monitor with AppKit/Core Graphics charts 
 
 A native app with no accounts, subscriptions, analytics, or privileged helper. Sparkle is bundled for optional signed updates; automatic checks are off by default. Free to use, change, and share under the [MIT license](LICENSE).
 
-**Built for Apple Silicon, with macOS 27 as the primary target for the next release and macOS 26 support retained.** The unreleased candidate passed actual-app visual checks on macOS 27.0.1 and 26.6, plus a one-hour memory soak on an M5 Pro MacBook Pro running macOS 27.0.1. See [current testing and results](docs/testing/2026-10-17-core-graphics-charts.md). macOS 27 power-sensor mappings remain experimental; these checks do not establish independent sensor accuracy. Earlier hardware reports, including an M5 MacBook Air, are recorded [separately](docs/testing/2026-10-12-hardware.md).
+**Built for Apple Silicon, with macOS 27 as the primary target and macOS 26 support retained.** The 0.2.2 candidate passed actual-app visual checks on macOS 27.0.1 and 26.6, plus a one-hour memory soak on an M5 Pro MacBook Pro running macOS 27.0.1. See [current testing and results](docs/testing/2026-10-17-core-graphics-charts.md). macOS 27 power-sensor mappings remain experimental; these checks do not establish independent sensor accuracy. Earlier hardware reports, including an M5 MacBook Air, are recorded [separately](docs/testing/2026-10-12-hardware.md).
 
-**Next-release support policy:** Starting with the release after 0.2.1, macOS 27 will be the primary target. macOS 26 support will remain until macOS 28 is released. Releases will be qualified on both supported versions; existing hardware-validation limits still apply.
+**Support policy for 0.2.2:** macOS 27 is the primary target. macOS 26 remains supported until macOS 28 is released. Releases are qualified on both supported versions; hardware-validation limits still apply.
 
 [Download the latest release](https://github.com/ballardcm/mystat/releases/latest) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Report an issue](https://github.com/ballardcm/mystat/issues)
 
@@ -44,7 +44,7 @@ Starting with **0.2.0, official releases are Developer ID signed and notarized b
 
 ## Build from source
 
-Use an Apple Silicon Mac with macOS 26 or 27, a compatible Apple Swift/Clang toolchain, and Python 3. The current candidate was built with full Xcode 27.1 and the macOS 27.0 SDK. Select Xcode as the active developer directory; the standalone Command Line Tools installation tested on macOS 27 lacked the required SwiftUI macro plugin. Homebrew and GCC are unnecessary. The first build downloads a pinned, checksum-verified Sparkle framework from its official GitHub release; later builds reuse that archive. No dependency installation is required for users.
+Use an Apple Silicon Mac with macOS 26 or 27, a compatible Apple Swift/Clang toolchain, and Python 3. Version 0.2.2 was built with full Xcode 27.1 and the macOS 27.0 SDK. Select Xcode as the active developer directory; the standalone Command Line Tools installation tested on macOS 27 lacked the required SwiftUI macro plugin. Homebrew and GCC are unnecessary. The first build downloads a pinned, checksum-verified Sparkle framework from its official GitHub release; later builds reuse that archive. No dependency installation is required for users.
 
 ```sh
 # After installing Xcode and completing its first-launch setup:
@@ -69,11 +69,11 @@ Package an ad-hoc test build, including the license, install guide, and SHA-256 
 
 Ad-hoc test artifacts are written to `dist/adhoc/`, which is excluded from Git. The release script runs the hardware tests, builds the app, checks its signature, and packages only the intended deliverables. Official releases use [Developer ID signing and notarization](docs/SIGNING.md); running `./scripts/release.sh` without `--adhoc` requires the signing identity and notarization Keychain profile and produces an archive only after Apple acceptance and local verification.
 
-## Memory footprint and testing (unreleased)
+## Memory footprint and testing (0.2.2)
 
-The next-release candidate replaces the three SwiftUI Canvas charts with AppKit/Core Graphics drawing, preserving the dashboard, readings, 60-sample histories, and sampling options. On an M5 Pro with 48 GB running macOS 27.0.1, matched open-dashboard runs at the default two-second refresh measured:
+Version 0.2.2 replaces the three SwiftUI Canvas charts with AppKit/Core Graphics drawing, preserving the dashboard, readings, 60-sample histories, and sampling options. On an M5 Pro with 48 GB running macOS 27.0.1, matched open-dashboard runs at the default two-second refresh measured:
 
-| Physical memory footprint | Canvas control | New candidate |
+| Physical memory footprint | Canvas control | 0.2.2 chart implementation |
 | --- | ---: | ---: |
 | Median over 61 samples | 127.3 MiB | 29.6 MiB |
 
@@ -81,7 +81,7 @@ That is about **77% less memory with the dashboard open** on this configuration.
 
 We also fixed a resource leak: CPU and memory sampling acquired two Mach host send-right references per sample without releasing them. The sampler now owns one reusable reference and releases it when destroyed. This kernel-resource leak was separate from the large chart allocations. Battery caching now retains only scalar readings, temporary sampling objects drain after each sample, and unchanged menu-bar values reuse one cached image.
 
-The ad-hoc candidate passed the automated suite and updater integration tests, actual-app visual checks on macOS 26.6 and 27.0.1 (light/dark, normal/small displays, resizing while open, settings, pause and dismissal), and 100 open/close cycles on macOS 27 with no material retained-memory growth. Physical sensor availability was smoke-tested; macOS 27 sensor mappings remain experimental. See the [exact candidate, methodology, results, and limitations](docs/testing/2026-10-17-core-graphics-charts.md). These changes are awaiting review and release approval; they are not in the published 0.2.1 release.
+The ad-hoc UI candidate for 0.2.2 passed the automated suite and updater integration tests, actual-app visual checks on macOS 26.6 and 27.0.1 (light/dark, normal/small displays, resizing while open, settings, pause and dismissal), and 100 open/close cycles on macOS 27 with no material retained-memory growth. Physical sensor availability was smoke-tested; macOS 27 sensor mappings remain experimental. See the [exact candidate, methodology, results, and limitations](docs/testing/2026-10-17-core-graphics-charts.md). These improvements ship in 0.2.2; 0.2.1 used the previous chart renderer.
 
 ## Measurements and compatibility
 
