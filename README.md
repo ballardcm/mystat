@@ -83,6 +83,18 @@ We also fixed a resource leak: CPU and memory sampling acquired two Mach host se
 
 The ad-hoc UI candidate for 0.2.2 passed the automated suite and updater integration tests, actual-app visual checks on macOS 26.6 and 27.0.1 (light/dark, normal/small displays, resizing while open, settings, pause and dismissal), and 100 open/close cycles on macOS 27 with no material retained-memory growth. Physical sensor availability was smoke-tested; macOS 27 sensor mappings remain experimental. See the [exact candidate, methodology, results, and limitations](docs/testing/2026-10-17-core-graphics-charts.md). These improvements ship in 0.2.2; 0.2.1 used the previous chart renderer. See the [signed release and installation evidence](docs/testing/2026-10-17-release-0.2.2.md).
 
+### Menu-bar comparison
+
+In approximately 20-minute menu-bar-only runs, MyStat 0.2.2 used **41% less median memory on an M5 Pro MacBook Pro** than popular paid monitoring software configured for CPU, memory, and GPU. Both used a nominal two-second refresh on the physical Mac, and average CPU use was very similar.
+
+| Environment | MyStat memory | Paid software memory | MyStat CPU | Paid software CPU |
+| --- | ---: | ---: | ---: | ---: |
+| MacBook Pro, macOS 27.0.1 | 27.9 MiB | 46.9 MiB | 0.55% | 0.54% |
+| macOS 27.0.1 VM | 11.8 MiB | 43.5 MiB | 0.18% | 0.27% |
+| macOS 26.6 VM | 10.2 MiB | 40.5 MiB | 0.07% | 0.18% |
+
+Memory is median physical footprint; CPU is the average percentage of **one core**. Totals include observed background processes. Settings and dropdowns were closed. The macOS 27 VM also used matched two-second refresh; the macOS 26 VM used **five seconds for MyStat versus two seconds for the paid software**, so its CPU figures are not a matched-rate comparison. VM GPU readings do not validate physical sensors. These are short observations under the stated workload, not universal performance or battery-life claims. See the [comparison methodology, peaks, and limitations](docs/testing/2026-10-17-monitoring-comparison.md).
+
 ## Measurements and compatibility
 
 | Reading | Source and meaning |
