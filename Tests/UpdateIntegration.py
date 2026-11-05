@@ -14,8 +14,8 @@ import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASE = ROOT / 'build/update-integration'
-TOOLS = ROOT / 'build/Sparkle-2.10.0/bin'
-SPARKLE = ROOT / 'build/Sparkle-2.10.0/Sparkle.framework'
+TOOLS = ROOT / 'build/Sparkle-2.10.1/bin'
+SPARKLE = ROOT / 'build/Sparkle-2.10.1/Sparkle.framework'
 NS = 'http://www.andymatuschak.org/xml-namespaces/sparkle'
 ET.register_namespace('sparkle', NS)
 

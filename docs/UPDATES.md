@@ -1,6 +1,6 @@
 # Signed updates
 
-MyStat uses Sparkle 2.10.0 for optional updates. A custom installer would add security-sensitive download, replacement, recovery, and relaunch code to this small project. Sparkle provides these mechanisms and native UI. The owner approved the bundled dependency and narrowly scoped update networking; other app activity remains offline.
+MyStat uses Sparkle 2.10.1 for optional updates. A custom installer would add security-sensitive download, replacement, recovery, and relaunch code to this small project. Sparkle provides these mechanisms and native UI. The owner approved the bundled dependency and narrowly scoped update networking; other app activity remains offline.
 
 ## Policy
 

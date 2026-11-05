@@ -64,7 +64,7 @@ def main():
         parser.error('Use --empty OR --archive ZIP --notes TEXT')
     # The shell script checks the pinned dependency before using its signing tools.
     subprocess.run(['zsh', '-c', 'set -euo pipefail; source scripts/sparkle.sh'], cwd=ROOT, check=True)
-    tools = ROOT / 'build/Sparkle-2.10.0/bin'
+    tools = ROOT / 'build/Sparkle-2.10.1/bin'
     public_key = subprocess.check_output([str(tools / 'generate_keys'), '--account', ACCOUNT, '-p'], text=True).strip()
     source_info = plistlib.loads((ROOT / 'Resources/Info.plist').read_bytes())
     if public_key != source_info['SUPublicEDKey']:
