@@ -1,0 +1,23 @@
+# Dependabot, so that the SHA pins in .github/workflows are a version somebody chose and
+# not a version somebody forgot. A pinned SHA does not move by itself, so without this an
+# advisory against an action would go unnoticed. Closes the 2026-10-25 assessment's F-1
+# for the actions.
+#
+# This does not watch Sparkle. Its version and hash are pinned in scripts/sparkle.sh, a
+# shell script Dependabot does not read, and there is no Swift package manifest here to
+# give it one. Sparkle has to be followed from its own releases instead.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    # A compromised release is normally found and pulled within days, so this waits a new
+    # version out rather than landing a pull request inside that window. It governs version
+    # updates only, so a security update still arrives the day the advisory does. It is
+    # `default-days` alone because one key Dependabot rejects stops every update in the
+    # file, as `semver-major-days` did on the docker ecosystem in the private repos.
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 2
