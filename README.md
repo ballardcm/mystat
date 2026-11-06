@@ -44,7 +44,7 @@ Starting with **0.2.0, official releases are Developer ID signed and notarized b
 
 ## Build from source
 
-Use an Apple Silicon Mac with macOS 26 or 27, a compatible Apple Swift/Clang toolchain, and Python 3. Version 0.2.3 was built with full Xcode 27.2 and the macOS  SDK. Select Xcode as the active developer directory; the standalone Command Line Tools installation tested on macOS 27 lacked the required SwiftUI macro plugin. Homebrew and GCC are unnecessary. The first build downloads a pinned, checksum-verified Sparkle framework from its official GitHub release; later builds reuse that archive. No dependency installation is required for users.
+Use an Apple Silicon Mac with macOS 26 or 27, a compatible Apple Swift/Clang toolchain, and Python 3. Version 0.2.3 was built with full Xcode 27.2 and the macOS 27.2 SDK. Select Xcode as the active developer directory; the standalone Command Line Tools installation tested on macOS 27 lacked the required SwiftUI macro plugin. Homebrew and GCC are unnecessary. The first build downloads a pinned, checksum-verified Sparkle framework from its official GitHub release; later builds reuse that archive. No dependency installation is required for users.
 
 ```sh
 # After installing Xcode and completing its first-launch setup:
@@ -57,7 +57,7 @@ cd mystat
 open build/MyStat.app
 ```
 
-The 0.2.3 release uses Xcode 27.2 and the macOS  SDK, with testing on macOS 27.0.1 and macOS 26.6. The build uses the active developer directory's default SDK, ignoring an inherited `SDKROOT`. If needed, set `MYSTAT_SDK` to a compatible SDK directory. It produces an arm64 app with an ad-hoc signature in `build/MyStat.app`.
+The 0.2.3 release uses Xcode 27.2 and the macOS 27.2 SDK, with testing on macOS 27.0.1 and macOS 26.6. The build uses the active developer directory's default SDK, ignoring an inherited `SDKROOT`. If needed, set `MYSTAT_SDK` to a compatible SDK directory. It produces an arm64 app with an ad-hoc signature in `build/MyStat.app`.
 
 Quit the running copy before opening a rebuilt app. Copy it to Applications before enabling launch at login, so its location remains stable.
 
