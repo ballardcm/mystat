@@ -6,23 +6,21 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <link>https://github.com/ballardcm/mystat/releases</link>
     <description>Stable releases for Apple Silicon on macOS 26 and 27.</description>
     <item>
-      <title>MyStat 0.2.2</title>
-      <sparkle:version>7</sparkle:version>
-      <sparkle:shortVersionString>0.2.2</sparkle:shortVersionString>
+      <title>MyStat 0.2.3</title>
+      <sparkle:version>8</sparkle:version>
+      <sparkle:shortVersionString>0.2.3</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
       <sparkle:maximumSystemVersion>27.99</sparkle:maximumSystemVersion>
-      <description sparkle:format="plain-text">MyStat 0.2.2 reduces the open dashboard's memory footprint with native AppKit/Core Graphics charts while preserving its readings, appearance, and 60-sample histories. On the tested M5 Pro, matched runs measured about 77% less memory (127.3 to 29.6 MiB); a one-hour soak at one-second refresh remained stable with a 33.3 MiB lifetime peak. Results vary by workload and hardware.
+      <description sparkle:format="plain-text">MyStat 0.2.3 updates the bundled Sparkle framework from 2.10.0 to 2.10.1, which fixes an update being installed too early from certain Unicode paths and release-notes links with stray whitespace. It is not a security release, and MyStat's own features and code are unchanged.
 
-Fixes a Mach host send-right resource leak during CPU/memory sampling. Also reduces retained battery data and temporary sampling allocations, and reuses unchanged menu-bar images.
+macOS 27 is the primary target; macOS 26 remains supported until macOS 28 is released. macOS 27 power-sensor mappings remain experimental. Automatic update checks remain off by default; no telemetry or new runtime dependencies.
 
-macOS 27 is now the primary target; macOS 26 remains supported until macOS 28 is released. macOS 27 power-sensor mappings remain experimental. Automatic update checks remain off by default; no telemetry or new runtime dependencies.
-
-Tested with automated and real Sparkle integration suites, actual-app visual checks on macOS 26.6 and 27.0.1, 100 dashboard open/close cycles, and the physical-host one-hour soak. Substantial implementation and testing assistance from OpenAI Codex.
+Tested with the automated and Sparkle integration suites, and a signed 0.2.2 to 0.2.3 Sparkle upgrade on macOS 26.6 and 27.0.1. Prepared with substantial AI assistance (Claude Code).
 </description>
-      <enclosure url="https://github.com/ballardcm/mystat/releases/download/v0.2.2/MyStat-0.2.2-macos-arm64.zip" length="1636747" type="application/octet-stream" sparkle:edSignature="BwzsWxA0tXrK4NHG623b4I7wZgQCUqqoXehujGrmaKEg/n+doo0D61HPkZKvu09o781YRvH3ovleeroP7FebCg==" sparkle:installationType="application" sparkle:os="macos"></enclosure>
+      <enclosure url="https://github.com/ballardcm/mystat/releases/download/v0.2.3/MyStat-0.2.3-macos-arm64.zip" length="1640949" type="application/octet-stream" sparkle:edSignature="51kftOsetcsmymgQRltcd0HeMGZWXo5Wlo0Ltq0ziY0OV4+5H8GAviA7kLpWQQq9VuOmMLJ6OZN8HOdfS7ifDw==" sparkle:installationType="application" sparkle:os="macos"></enclosure>
     </item>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: qVCOQhqYhM0UhhbnNGykrvBKY/NhpZa4tFuVklFrWkRLViaL+0xVEb/ecHcZTUQcLjE9s5NKpAjR0AFq49/WCg==
-length: 2360
+edSignature: R5qj5BAQml7iWeQaD0IkpL2PBtK0G9W4FcLsUcewHovHKow3q6bSMDVq9tkjgjttvV3R7Z0BtiKvqTi5Ta7/BQ==
+length: 2007
 -->
