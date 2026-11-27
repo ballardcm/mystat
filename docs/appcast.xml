@@ -6,21 +6,21 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <link>https://github.com/ballardcm/mystat/releases</link>
     <description>Stable releases for Apple Silicon on macOS 26 and 27.</description>
     <item>
-      <title>MyStat 0.2.3</title>
-      <sparkle:version>8</sparkle:version>
-      <sparkle:shortVersionString>0.2.3</sparkle:shortVersionString>
+      <title>MyStat 0.2.4</title>
+      <sparkle:version>9</sparkle:version>
+      <sparkle:shortVersionString>0.2.4</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
       <sparkle:maximumSystemVersion>27.99</sparkle:maximumSystemVersion>
-      <description sparkle:format="plain-text">MyStat 0.2.3 updates the bundled Sparkle framework from 2.10.0 to 2.10.1, which fixes an update being installed too early from certain Unicode paths and release-notes links with stray whitespace. It is not a security release, and MyStat's own features and code are unchanged.
+      <description sparkle:format="plain-text">MyStat 0.2.4 shows the battery percentage in the Power card when the Mac has a battery, with its state (On battery, Plugged in or Charging) and a matching battery symbol. A Mac without a battery now reads Plugged in instead of On battery.
 
 macOS 27 is the primary target; macOS 26 remains supported until macOS 28 is released. macOS 27 power-sensor mappings remain experimental. Automatic update checks remain off by default; no telemetry or new runtime dependencies.
 
-Tested with the automated and Sparkle integration suites, and a signed 0.2.2 to 0.2.3 Sparkle upgrade on macOS 26.6 and 27.0.1. Prepared with substantial AI assistance (Claude Code).
+Tested with the automated and Sparkle integration suites, and actual-app checks of the candidate on macOS 26.6 and 27.0.1 and on an Apple Silicon MacBook. Prepared with substantial AI assistance (Claude Code).
 </description>
-      <enclosure url="https://github.com/ballardcm/mystat/releases/download/v0.2.3/MyStat-0.2.3-macos-arm64.zip" length="1640949" type="application/octet-stream" sparkle:edSignature="51kftOsetcsmymgQRltcd0HeMGZWXo5Wlo0Ltq0ziY0OV4+5H8GAviA7kLpWQQq9VuOmMLJ6OZN8HOdfS7ifDw==" sparkle:installationType="application" sparkle:os="macos"></enclosure>
+      <enclosure url="https://github.com/ballardcm/mystat/releases/download/v0.2.4/MyStat-0.2.4-macos-arm64.zip" length="1642864" type="application/octet-stream" sparkle:edSignature="6+cvsRXCemh1OO1/hajrNfvKUThmxPPRv5DIc/UXXB2K5L8BCHjJhqf+SxSE4lVvXuXRSOpoGDuTNHS/pVA+Cw==" sparkle:installationType="application" sparkle:os="macos"></enclosure>
     </item>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: R5qj5BAQml7iWeQaD0IkpL2PBtK0G9W4FcLsUcewHovHKow3q6bSMDVq9tkjgjttvV3R7Z0BtiKvqTi5Ta7/BQ==
-length: 2007
+edSignature: G9JobBP79wmS+YVc2RXsCxAuBolCDsGN+S0YtgT/fQHnW9D582silCzmtXx254h31RJNumYrAFFJ5qWx0j9JAQ==
+length: 1997
 -->
