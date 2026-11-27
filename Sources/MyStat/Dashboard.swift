@@ -132,8 +132,15 @@ struct Dashboard: View {
             HStack {
                 Label("Power", systemImage: "bolt").font(.system(size: 12, weight: .semibold))
                 Spacer()
-                Text(m.onAC ? "Plugged in" : "On battery").font(.system(size: 10)).foregroundStyle(.secondary)
-                Image(systemName: m.onAC ? "powerplug" : "battery.75percent").font(.system(size: 10)).foregroundStyle(.secondary)
+                // A Mac without a battery has no registry entry and is always on mains power.
+                if let level = m.batteryPercent {
+                    Text("\(percent(level)) · \(m.charging ? "Charging" : m.onAC ? "Plugged in" : "On battery")")
+                        .font(.system(size: 10)).monospacedDigit().foregroundStyle(.secondary)
+                    Image(systemName: batterySymbol(percent: level, charging: m.charging)).font(.system(size: 10)).foregroundStyle(.secondary)
+                } else {
+                    Text("Plugged in").font(.system(size: 10)).foregroundStyle(.secondary)
+                    Image(systemName: "powerplug").font(.system(size: 10)).foregroundStyle(.secondary)
+                }
             }
             HStack(alignment: .firstTextBaseline, spacing: 0) {
                 VStack(alignment: .leading, spacing: 3) {

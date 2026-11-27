@@ -37,7 +37,8 @@ struct BatteryReadings {
     init(properties: [String: Any]) {
         onAC = (properties["ExternalConnected"] as? Bool) ?? false
         charging = (properties["IsCharging"] as? Bool) ?? false
-        percent = (properties["CurrentCapacity"] as? NSNumber)?.doubleValue
+        // On Apple silicon CurrentCapacity is already a 0–100 charge level.
+        percent = (properties["CurrentCapacity"] as? NSNumber).flatMap { finite($0.doubleValue, in: 0...100) }
         if let voltage = properties["Voltage"] as? NSNumber,
            let amperage = properties["InstantAmperage"] as? NSNumber {
             // The registry may encode a negative signed current as a UInt64.
@@ -102,6 +103,13 @@ func processCPUSeconds() -> Double {
     var usage = rusage()
     guard getrusage(RUSAGE_SELF, &usage) == 0 else { return 0 }
     return Double(usage.ru_utime.tv_sec + usage.ru_stime.tv_sec) + Double(usage.ru_utime.tv_usec + usage.ru_stime.tv_usec) / 1e6
+}
+// SF Symbols draws battery levels only in quarter steps, so show the nearest one.
+// Charging uses the bolt glyph, which has no level variants below full.
+func batterySymbol(percent: Double, charging: Bool) -> String {
+    if charging { return "battery.100percent.bolt" }
+    let step = Int((min(max(percent, 0), 100) / 25).rounded()) * 25
+    return "battery.\(step)percent"
 }
 func finite(_ value: Double, in range: ClosedRange<Double> = 0...1000) -> Double? {
     value.isFinite && range.contains(value) ? value : nil

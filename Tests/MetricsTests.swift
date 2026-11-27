@@ -33,6 +33,14 @@ struct MetricsTests {
             let battery = BatteryReadings(properties: ["PowerTelemetryData": ["SystemLoad": value]])
             precondition(battery.systemPower == nil, "Invalid system power must remain unavailable")
         }
+        for value in [-1, 101, Double.nan] {
+            precondition(BatteryReadings(properties: ["CurrentCapacity": value]).percent == nil,
+                         "Out-of-range charge level must remain unavailable")
+        }
+        precondition(batterySymbol(percent: 23, charging: false) == "battery.25percent")
+        precondition(batterySymbol(percent: 12, charging: false) == "battery.0percent")
+        precondition(batterySymbol(percent: 88, charging: false) == "battery.100percent")
+        precondition(batterySymbol(percent: 40, charging: true) == "battery.100percent.bolt")
         let excessive = BatteryReadings(properties: ["Voltage": 12000, "InstantAmperage": 1000000])
         precondition(excessive.power == nil)
         let malformed = BatteryReadings(properties: [
@@ -72,6 +80,6 @@ struct MetricsTests {
             precondition(hostReferences(host) == ownedReferences - 1,
                          "Releasing a reader leaked its host port reference")
         }
-        print("PASS: battery decoding, unavailable/invalid values, registry object release, and stable Mach host ownership across sampling/reset.")
+        print("PASS: battery decoding, charge-level symbols, unavailable/invalid values, registry object release, and stable Mach host ownership across sampling/reset.")
     }
 }
